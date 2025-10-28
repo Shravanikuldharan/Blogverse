@@ -17,7 +17,7 @@ function BlogCard({
           status != "published" ? (
             <span className='bg-yellow-200 text-yellow-700 text-xs font-semibold px-2 py-1 rounded-md mr-4'>
               {status}
-            </span> 
+            </span>
           ) : null
         }
         {title}
@@ -37,23 +37,23 @@ function BlogCard({
       <span className="absolute top-2 right-2 bg-gray-200 text-gray-700 text-xs font-semibold px-2 py-1 rounded-md">
         {category}
       </span>
-{status == "published" ? (
-      <Link
+      {status == "published" ? (
+        <Link
           className="bg-gray-700 text-white px-6 py-2 rounded-md absolute bottom-4 right-4
            cursor-pointer"
-           to={`/blog/${slug}`}
+          to={`/blog/${slug}`}
         >
           Read more
         </Link>
-) : (
-      <Link
+      ) : (
+        <Link
           className="bg-gray-700 text-white px-6 py-2 rounded-md absolute bottom-4 right-4
            cursor-pointer"
-           to={`/edit/${slug}`}
+          to={`/edit/${slug}`}
         >
           Edit Blog
         </Link>
-)}
+      )}
     </div>
   );
 }
