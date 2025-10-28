@@ -32,8 +32,8 @@ function EditBlog() {
   }, []);
 
   const updateBlog = async () => {
-    const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}/blogs`,
+    const response = await axios.put(
+      `${import.meta.env.VITE_API_URL}/blogs/${slug}`,
       {
         title,
         content,
@@ -101,7 +101,7 @@ function EditBlog() {
         type="button"
         onClick={updateBlog}
       >
-        Update Blog
+        Save
       </button>
 
       <button
