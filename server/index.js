@@ -1,30 +1,31 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
 import jwt from "jsonwebtoken";
-import dotenv from 'dotenv';
-import { postLogin, postSignup } from './controllers/user.js';
-import { postBlogs, getBlogs, getBlogForSlug, patchPublishBlog, putBlogs } from './controllers/blog.js';
-
+import mongoose from "mongoose";
+import {
+  getBlogForSlug,
+  getBlogs,
+  patchPublishBlog,
+  postBlogs,
+  putBlogs,
+} from "./controllers/blog.js";
+import { postLogin, postSignup } from "./controllers/user.js";
+import Blog from "./models/Blog.js";
 dotenv.config();
 
 const app = express();
 
 app.use(express.json());
-
 app.use(cors());
 
-const connectDB = async() => {
-  try
-  {
+const connectDB = async () => {
+  try {
     const conn = await mongoose.connect(process.env.MONGODB_URL);
-    if(conn)
-    {
-      console.log("MongoDB Connected");
+    if (conn) {
+      console.log("MongoDB connected");
     }
-  }
-    catch(error)
-  {
+  } catch (error) {
     console.error("MongoDB connection error:", error);
   }
 };
@@ -32,7 +33,7 @@ const connectDB = async() => {
 app.get("/", (req, res) => {
   res.json({
     success: true,
-    message: "Server is up and running..."
+    message: "Server is up and running...",
   });
 });
 
@@ -56,10 +57,26 @@ const jwtCheck = (req, res, next) => {
   }
 };
 
+const increaseViewCount = async (req, res, next) => {
+  const { slug } = req.params;
+
+  try {
+    const blog = await Blog.findOne({ slug });
+    if (blog) {
+      blog.viewCount += 1;
+      await blog.save();
+    }
+  } catch (error) {
+    console.error("Error increasing view count:", error);
+  }
+
+  next();
+};
+
 app.post("/signup", postSignup);
 app.post("/login", postLogin);
 app.get("/blogs", getBlogs);
-app.get("/blogs/:slug", getBlogForSlug);
+app.get("/blogs/:slug", increaseViewCount, getBlogForSlug);
 
 app.post("/blogs", jwtCheck, postBlogs);
 app.patch("/blogs/:slug/publish", jwtCheck, patchPublishBlog);
