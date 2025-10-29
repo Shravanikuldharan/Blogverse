@@ -9,7 +9,7 @@ import Login from './views/Login'
 import Signup from './views/Signup'
 
 createRoot(document.getElementById('root')).render(
-    <BrowserRouter>
+  <BrowserRouter>
     <Routes>
       <Route path="/" element={<AllBlogs />} />
       <Route path="/new" element={<NewBlog />} />
@@ -23,5 +23,4 @@ createRoot(document.getElementById('root')).render(
       />
     </Routes>
   </BrowserRouter>
-
 )

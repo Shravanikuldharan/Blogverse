@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
-h1{
+h1 {
     @apply text-3xl font-bold;
 }
 
-h2{
+h2 {
     @apply text-2xl font-semibold;
 }
 
-h3{
+h3 {
     @apply text-xl font-medium;
 }
 
-h4{
+h4 {
     @apply text-lg font-normal;
 }
 
-h5{
+h5 {
     @apply text-base font-light;
 }
