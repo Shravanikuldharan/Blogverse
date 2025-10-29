@@ -1,9 +1,24 @@
 import Blog from "./../models/Blog.js";
+import jwt from "jsonwebtoken";
 
 const postBlogs = async (req, res) => {
-    const { title, category, content, author } = req.body;
+    const { title, category, content } = req.body;
 
-    if (!title || !category || !content || !author) {
+    const authorization = req.headers.authorization;
+
+    console.log(authorization);
+    let decodedToken
+    try{
+    decodedToken = jwt.verify(authorization.split(" ")[1], process.env.JWT_SECRET);
+    }
+    catch(error) {
+        res.status(401).json({
+        message: "Invalid token"
+        });
+    }
+    console.log(decodedToken);
+
+    if (!title || !category || !content ) {
         return res.status(400).json({
             success: false,
             message: "All fileds are requires",
@@ -14,7 +29,7 @@ const postBlogs = async (req, res) => {
         title,
         category,
         content,
-        author,
+        author: decodedToken?.id,
         slug: `temp-slug-${Date.now()}-${Math.random().toString()}`
     });
 
