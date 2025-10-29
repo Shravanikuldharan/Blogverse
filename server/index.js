@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import jwt from "jsonwebtoken";
 import dotenv from 'dotenv';
 import { postLogin, postSignup } from './controllers/user.js';
 import { postBlogs, getBlogs, getBlogForSlug, patchPublishBlog, putBlogs } from './controllers/blog.js';
@@ -35,13 +36,34 @@ app.get("/", (req, res) => {
   });
 });
 
+const jwtCheck = (req, res, next) => {
+  req.user = null;
+
+  const { authorization } = req.headers;
+
+  if (!authorization) {
+    return res.status(400).json({ message: "Authorization token missing" });
+  }
+
+  try {
+    const token = authorization.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: "Invalid JWT Token" });
+  }
+};
+
 app.post("/signup", postSignup);
 app.post("/login", postLogin);
 app.get("/blogs", getBlogs);
-app.post("/blogs", postBlogs);
 app.get("/blogs/:slug", getBlogForSlug);
-app.patch("/blogs/:slug/publish", patchPublishBlog);
-app.put("/blogs/:slug", putBlogs);
+
+app.post("/blogs", jwtCheck, postBlogs);
+app.patch("/blogs/:slug/publish", jwtCheck, patchPublishBlog);
+app.put("/blogs/:slug", jwtCheck, putBlogs);
 
 const PORT = process.env.PORT || 8080;
 

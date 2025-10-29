@@ -1,22 +1,9 @@
 import Blog from "./../models/Blog.js";
-import jwt from "jsonwebtoken";
 
 const postBlogs = async (req, res) => {
     const { title, category, content } = req.body;
 
-    const authorization = req.headers.authorization;
-
-    console.log(authorization);
-    let decodedToken
-    try{
-    decodedToken = jwt.verify(authorization.split(" ")[1], process.env.JWT_SECRET);
-    }
-    catch(error) {
-        res.status(401).json({
-        message: "Invalid token"
-        });
-    }
-    console.log(decodedToken);
+    const { user } = req;
 
     if (!title || !category || !content ) {
         return res.status(400).json({
@@ -29,7 +16,7 @@ const postBlogs = async (req, res) => {
         title,
         category,
         content,
-        author: decodedToken?.id,
+        author: user?.id,
         slug: `temp-slug-${Date.now()}-${Math.random().toString()}`
     });
 
@@ -90,6 +77,25 @@ const getBlogForSlug = async (req, res) => {
 const patchPublishBlog = async (req, res) => {
     const { slug } = req.params;
 
+     const { user } = req;
+
+     const blog = await Blog.findOne({ slug: slug });
+
+  if (!blog) {
+    return res.status(404).json({
+      success: false,
+      message: "Blog not found",
+    });
+  }
+
+  if (blog.author.toString() !== user?.id) {
+    return res.status(403).json({
+      success: false,
+      message: "You are not authorized to publish this blog",
+    });
+  }
+
+
     await Blog.findOneAndUpdate({ slug: slug }, { status: "published" });
 
     res.status(200).json({
@@ -100,7 +106,24 @@ const patchPublishBlog = async (req, res) => {
 
 const putBlogs = async (req, res) => {
   const { slug } = req.params;
-  const { title, category, content } = req.body;
+  
+    const { user } = req;
+
+    const existingBlog = await Blog.findOne({ slug: slug });
+
+    if(!existingBlog) {
+     return res.status(404).json({
+        success: false,
+        message: "Blog Not Found"
+      });
+    }
+
+    if (existingBlog.author.toString() !== user.id) {
+    return res.status(403).json({
+      success: false,
+      message: "You are not authorized to update this blog",
+    });
+    }
 
   if (!title || !category || !content) {
     return res.status(400).json({
