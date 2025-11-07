@@ -12,6 +12,7 @@ import {
 } from "./controllers/blog.js";
 import { postLogin, postSignup } from "./controllers/user.js";
 import Blog from "./models/Blog.js";
+import { getCommentBySlug, postCommentBySlug } from "./controllers/comments.js";
 dotenv.config();
 
 const app = express();
@@ -81,6 +82,9 @@ app.get("/blogs/:slug", increaseViewCount, getBlogForSlug);
 app.post("/blogs", jwtCheck, postBlogs);
 app.patch("/blogs/:slug/publish", jwtCheck, patchPublishBlog);
 app.put("/blogs/:slug", jwtCheck, putBlogs);
+
+app.post("/blogs/:slug/comments", jwtCheck, postCommentBySlug);
+app.get("/blogs/:slug/comments", getCommentBySlug);
 
 const PORT = process.env.PORT || 8080;
 
