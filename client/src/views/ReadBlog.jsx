@@ -54,7 +54,7 @@ function ReadBlog() {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Login required to comment");
+      toast.error("You need to log in to post a comment.");
     }
   };
 
@@ -67,7 +67,7 @@ function ReadBlog() {
   return (
     <div className="container mx-auto p-4">
       <Navbar />
-      <Toaster position="top-right" />
+      <Toaster />
 
       <h1 className="text-2xl font-bold mb-4">{blog.title}</h1>
       <p>

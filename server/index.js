@@ -86,6 +86,8 @@ app.put("/blogs/:slug", jwtCheck, putBlogs);
 app.post("/blogs/:slug/comments", jwtCheck, postCommentBySlug);
 app.get("/blogs/:slug/comments", getCommentBySlug);
 
+// app.post("/blogs/:slug/likes", jwtCheck, postlikeBySlug);
+
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
