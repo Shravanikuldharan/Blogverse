@@ -8,6 +8,7 @@ import ReadBlog from './views/ReadBlog'
 import Login from './views/Login'
 import Signup from './views/Signup'
 import NotFound from './views/NotFound'
+import Favourites from './views/Favourites'
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -19,6 +20,7 @@ createRoot(document.getElementById('root')).render(
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="*" element={<NotFound/>} />
+      <Route path="/favourites" element={<Favourites/>} />
     </Routes>
   </BrowserRouter>
 )

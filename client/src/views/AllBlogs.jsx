@@ -9,10 +9,14 @@ function AllBlogs() {
   const [blogs, setBlogs] = useState([]);
 
   const fetchBlogs = async () => {
-    const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/blogs?author=${user?._id || ""}`
-    );
-    setBlogs(response.data.data);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/blogs?author=${user?._id || ""}`
+      );
+      setBlogs(response.data.data);
+    } catch (error) {
+      console.error("Error fetching blogs:", error);
+    }
   };
 
   useEffect(() => {
@@ -24,10 +28,21 @@ function AllBlogs() {
   }, [user]);
 
   return (
-    <div>
-      <div className="container mx-auto p-4">
-        <Navbar />
-        {blogs.map((blog) => {
+    <div className="container mx-auto p-4">
+      <Navbar />
+
+      {user && (
+        <h2 className="text-lg text-gray-700 font-medium mb-6">
+          Hello, <span className="font-semibold">{user.name}</span> 👋
+        </h2>
+      )}
+
+      {blogs.length === 0 ? (
+        <p className="text-gray-500 text-center mt-10">
+          No blogs found yet. Create your first one!
+        </p>
+      ) : (
+        blogs.map((blog) => {
           const {
             _id,
             title,
@@ -51,12 +66,11 @@ function AllBlogs() {
               category={category}
               slug={slug}
               viewCount={viewCount}
-                initialLikes={blog.likes} // 👈 add this
-
+              initialLikes={blog.likes}
             />
           );
-        })}
-      </div>
+        })
+      )}
     </div>
   );
 }

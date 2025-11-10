@@ -1,73 +1,11 @@
-// import { Link } from "react-router";
-
-// function BlogCard({
-//   title,
-//   author,
-//   publishedAt,
-//   updatedAt,
-//   status,
-//   category,
-//   slug,
-//   viewCount,
-// }) 
-// {
-//   return (
-//     <div className="border p-4 my-4 rounded-md relative">
-//       <h2>
-//         {status != "published" ? (
-//           <span className="bg-yellow-200 text-yellow-700 text-xs font-semibold px-2 py-1 rounded-md mr-4">
-//             {status}
-//           </span>
-//         ) : null}
-
-//         {title}
-//       </h2>
-//       <div className="flex items-center gap-2 my-2">
-//         <div className="flex items-center justify-center font-semibold w-[35px] h-[35px] bg-orange-300 text-center text-white rounded-full text-xl">
-//           {author.name.substring(0, 1)}
-//         </div>
-
-//         <div>
-//           <p>{author.name}</p>
-//           {/* <p>{author.email}</p> */}
-//         </div>
-//       </div>
-//       <p className="text-sm mt-2">
-//         Published On: {new Date(publishedAt || updatedAt).toLocaleString()},
-//         Read By {viewCount} people
-//       </p>
-
-//       <span className="absolute top-2 right-2 bg-gray-200 text-gray-700 text-xs font-semibold px-2 py-1 rounded-md">
-//         {category}
-//       </span>
-
-//       {status == "published" ? (
-//         <Link
-//           className="bg-gray-700 text-white px-6 py-2 rounded-md absolute bottom-4 right-4 cursor-pointer"
-//           to={`/blog/${slug}`}
-//         >
-//           Read More
-//         </Link>
-//       ) : (
-//         <Link
-//           className="bg-gray-700 text-white px-6 py-2 rounded-md absolute bottom-4 right-4 cursor-pointer"
-//           to={`/edit/${slug}`}
-//         >
-//           Edit Blog
-//         </Link>
-//       )}
-//     </div>
-//   );
-// }
-
-// export default BlogCard;
 import { Link } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 function BlogCard({
+  _id,
   title,
   author,
   publishedAt,
@@ -76,29 +14,50 @@ function BlogCard({
   category,
   slug,
   viewCount,
-  initialLikes = 0, 
+  initialLikes = 0,
 }) {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(initialLikes);
 
+  // Load from localStorage (favorites per user)
+  useEffect(() => {
+    const storedLikes = JSON.parse(localStorage.getItem("favorites")) || [];
+    setLiked(storedLikes.includes(slug));
+  }, [slug]);
+
   const toggleLike = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("You need to log in to like/unlike this blog.");
+      return;
+    }
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/blogs/${slug}/like`,
         {},
         {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
       if (response.data.success) {
         setLiked(response.data.liked);
         setLikeCount(response.data.totalLikes);
+
+        const storedLikes = JSON.parse(localStorage.getItem("favorites")) || [];
+        let updatedLikes;
+
+        if (response.data.liked) {
+          updatedLikes = [...new Set([...storedLikes, slug])];
+        } else {
+          updatedLikes = storedLikes.filter((s) => s !== slug);
+        }
+
+        localStorage.setItem("favorites", JSON.stringify(updatedLikes));
       }
     } catch (error) {
-      toast.error("You need to log in to like/unlike this blog.");
+      toast.error("Error toggling like");
     }
   };
 
@@ -114,11 +73,10 @@ function BlogCard({
           {title}
         </h2>
 
-        {/* Like Icon */}
-        <div className="flex items-center gap-40">
+        <div className="flex items-center gap-1">
           <button
             onClick={toggleLike}
-            className="focus:outline-none transition-transform duration-200 hover:scale-110 active:scale-95"
+            className="mr-40 cursor-pointer focus:outline-none transition-transform duration-200 hover:scale-110 active:scale-95"
             title={liked ? "Unlike this blog" : "Like this blog"}
           >
             {liked ? (
