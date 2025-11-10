@@ -81,13 +81,13 @@ function ReadBlog() {
           {blog.category}
         </span>
 
-        <div className="flex items-center gap-4 my-2 ml-14">
-          <div className="flex items-center justify-center font-semibold w-[50px] h-[50px] bg-orange-300 text-center text-white rounded-full text-3xl">
+        <div className="flex items-center gap-2 my-2 ml-14">
+          <div className="flex items-center justify-center font-semibold w-[35px] h-[35px] bg-orange-300 text-center text-white rounded-full text-xl">
             {blog?.author?.name?.substring(0, 1)}
           </div>
           <div>
             <p>{blog?.author?.name}</p>
-            <p>{blog?.author?.email}</p>
+            {/* <p>{blog?.author?.email}</p> */}
           </div>
         </div>
       </div>

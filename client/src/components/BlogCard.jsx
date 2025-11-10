@@ -22,14 +22,14 @@ function BlogCard({
 
         {title}
       </h2>
-      <div className="flex items-center gap-4 my-2">
-        <div className="flex items-center justify-center font-semibold w-[50px] h-[50px] bg-orange-300 text-center text-white rounded-full text-3xl">
+      <div className="flex items-center gap-2 my-2">
+        <div className="flex items-center justify-center font-semibold w-[35px] h-[35px] bg-orange-300 text-center text-white rounded-full text-xl">
           {author.name.substring(0, 1)}
         </div>
 
         <div>
           <p>{author.name}</p>
-          <p>{author.email}</p>
+          {/* <p>{author.email}</p> */}
         </div>
       </div>
       <p className="text-sm mt-2">
