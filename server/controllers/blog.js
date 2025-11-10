@@ -149,4 +149,57 @@ const putBlogs = async (req, res) => {
   });
 };
 
-export { getBlogForSlug, getBlogs, patchPublishBlog, postBlogs, putBlogs };
+const userLikes = {};
+
+const toggleLikeBlog = async (req, res) => {
+  const { slug } = req.params;
+  const { user } = req; // comes from jwtCheck
+
+  try {
+    const blog = await Blog.findOne({ slug });
+    if (!blog) {
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found",
+      });
+    }
+
+    // Initialize record if not exist
+    if (!userLikes[blog._id]) {
+      userLikes[blog._id] = new Set();
+    }
+
+    const likedSet = userLikes[blog._id];
+    let liked;
+
+    if (likedSet.has(user.id)) {
+      // 👎 Unlike
+      likedSet.delete(user.id);
+      blog.likes = Math.max(0, blog.likes - 1);
+      liked = false;
+    } else {
+      // ❤️ Like
+      likedSet.add(user.id);
+      blog.likes += 1;
+      liked = true;
+    }
+
+    await blog.save();
+
+    return res.status(200).json({
+      success: true,
+      liked,
+      totalLikes: blog.likes,
+      message: liked ? "Liked successfully" : "Unliked successfully",
+    });
+  } catch (error) {
+    console.error("Error toggling like:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error toggling like",
+      error: error.message,
+    });
+  }
+};
+
+export { getBlogForSlug, getBlogs, patchPublishBlog, postBlogs, putBlogs, toggleLikeBlog };

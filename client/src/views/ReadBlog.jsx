@@ -50,7 +50,7 @@ function ReadBlog() {
       if (response) {
         toast.success(response.data.message);
         setNewComment("");
-        loadComments(); 
+        loadComments();
       }
     } catch (error) {
       console.log(error);
@@ -77,6 +77,8 @@ function ReadBlog() {
       </p>
 
       <div className="flex items-center mb-4">
+        <div className="flex items-center gap-3 mt-3">
+        </div>
         <span className="text-xl bg-orange-400 px-4 py-1 rounded-full text-white">
           {blog.category}
         </span>

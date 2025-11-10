@@ -14,6 +14,7 @@ const blogSchema = new Schema(
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     slug: { type: String, required: true, unique: true },
     viewCount: { type: Number, default: 0 },
+    likes: { type: Number, default: 0 },
   },
   {
     timestamps: true,

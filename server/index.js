@@ -9,6 +9,7 @@ import {
   patchPublishBlog,
   postBlogs,
   putBlogs,
+  toggleLikeBlog,
 } from "./controllers/blog.js";
 import { postLogin, postSignup } from "./controllers/user.js";
 import Blog from "./models/Blog.js";
@@ -77,6 +78,10 @@ const increaseViewCount = async (req, res, next) => {
 app.post("/signup", postSignup);
 app.post("/login", postLogin);
 app.get("/blogs", getBlogs);
+
+app.post("/blogs/:slug/like",jwtCheck, toggleLikeBlog);
+
+
 app.get("/blogs/:slug", increaseViewCount, getBlogForSlug);
 
 app.post("/blogs", jwtCheck, postBlogs);
@@ -87,6 +92,7 @@ app.post("/blogs/:slug/comments", jwtCheck, postCommentBySlug);
 app.get("/blogs/:slug/comments", getCommentBySlug);
 
 // app.post("/blogs/:slug/likes", jwtCheck, postlikeBySlug);
+
 
 const PORT = process.env.PORT || 8080;
 

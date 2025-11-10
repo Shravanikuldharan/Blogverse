@@ -51,6 +51,8 @@ function AllBlogs() {
               category={category}
               slug={slug}
               viewCount={viewCount}
+                initialLikes={blog.likes} // 👈 add this
+
             />
           );
         })}
