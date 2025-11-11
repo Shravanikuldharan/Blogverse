@@ -153,7 +153,7 @@ const userLikes = {};
 
 const toggleLikeBlog = async (req, res) => {
   const { slug } = req.params;
-  const { user } = req; // comes from jwtCheck
+  const { user } = req; 
 
   try {
     const blog = await Blog.findOne({ slug });
@@ -164,7 +164,6 @@ const toggleLikeBlog = async (req, res) => {
       });
     }
 
-    // Initialize record if not exist
     if (!userLikes[blog._id]) {
       userLikes[blog._id] = new Set();
     }
@@ -173,12 +172,10 @@ const toggleLikeBlog = async (req, res) => {
     let liked;
 
     if (likedSet.has(user.id)) {
-      // 👎 Unlike
       likedSet.delete(user.id);
       blog.likes = Math.max(0, blog.likes - 1);
       liked = false;
     } else {
-      // ❤️ Like
       likedSet.add(user.id);
       blog.likes += 1;
       liked = true;
@@ -202,4 +199,25 @@ const toggleLikeBlog = async (req, res) => {
   }
 };
 
-export { getBlogForSlug, getBlogs, patchPublishBlog, postBlogs, putBlogs, toggleLikeBlog };
+const thumbLikeBlog = async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const blog = await Blog.findOne({ slug });
+    if (!blog) {
+      return res.status(404).json({ success: false, message: "Blog not found" });
+    }
+
+    blog.thumbLikes = (blog.thumbLikes || 0) + 1;
+    await blog.save();
+
+    res.json({
+      success: true,
+      totalThumbLikes: blog.thumbLikes,
+    });
+  } catch (error) {
+    console.error("Error updating thumb likes:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export { getBlogForSlug, getBlogs, patchPublishBlog, postBlogs, putBlogs, toggleLikeBlog, thumbLikeBlog };

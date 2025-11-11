@@ -9,6 +9,7 @@ import {
   patchPublishBlog,
   postBlogs,
   putBlogs,
+  thumbLikeBlog,
   toggleLikeBlog,
 } from "./controllers/blog.js";
 import { postLogin, postSignup } from "./controllers/user.js";
@@ -81,6 +82,7 @@ app.get("/blogs", getBlogs);
 
 app.post("/blogs/:slug/like",jwtCheck, toggleLikeBlog);
 
+app.post("/blogs/:slug/thumb-like",jwtCheck, thumbLikeBlog);
 
 app.get("/blogs/:slug", increaseViewCount, getBlogForSlug);
 
@@ -90,9 +92,6 @@ app.put("/blogs/:slug", jwtCheck, putBlogs);
 
 app.post("/blogs/:slug/comments", jwtCheck, postCommentBySlug);
 app.get("/blogs/:slug/comments", getCommentBySlug);
-
-// app.post("/blogs/:slug/likes", jwtCheck, postlikeBySlug);
-
 
 const PORT = process.env.PORT || 8080;
 

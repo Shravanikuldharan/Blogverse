@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Navbar from "../components/Navbar";
 import toast, { Toaster } from "react-hot-toast";
+import { FaThumbsUp, FaRegThumbsUp, FaEye } from "react-icons/fa";
 
 function ReadBlog() {
   const { slug } = useParams();
@@ -11,11 +12,41 @@ function ReadBlog() {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
 
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+
   const fetchBlog = async () => {
-    const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/blogs/${slug}`
-    );
-    setBlog(response.data.data);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/blogs/${slug}`
+      );
+      const data = response.data.data;
+      setBlog(data);
+      setLikeCount(data.likes || 0);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const toggleLike = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/blogs/${slug}/like`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        setLiked(response.data.liked);
+        setLikeCount(response.data.totalLikes);
+      }
+    } catch (error) {
+      toast.error("You need to log in to like this post.");
+    }
   };
 
   const loadComments = async () => {
@@ -23,12 +54,9 @@ function ReadBlog() {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/blogs/${slug}/comments`
       );
-      if (response) {
-        setComments(response.data.comments);
-      }
+      setComments(response.data.comments || []);
     } catch (error) {
       toast.error("Error loading comments");
-      console.log(error);
     }
   };
 
@@ -37,6 +65,7 @@ function ReadBlog() {
       toast.error("Comment cannot be empty");
       return;
     }
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/blogs/${slug}/comments`,
@@ -47,13 +76,10 @@ function ReadBlog() {
           },
         }
       );
-      if (response) {
-        toast.success(response.data.message);
-        setNewComment("");
-        loadComments();
-      }
+      toast.success(response.data.message);
+      setNewComment("");
+      loadComments();
     } catch (error) {
-      console.log(error);
       toast.error("You need to log in to post a comment.");
     }
   };
@@ -69,34 +95,46 @@ function ReadBlog() {
       <Navbar />
       <Toaster />
 
-      <h1 className="text-2xl font-bold mb-4">{blog.title}</h1>
-      <p>
-        Published On:{" "}
-        {new Date(blog.publishedAt || blog.updatedAt).toLocaleString()}, Read by{" "}
-        {blog.viewCount} people
-      </p>
+      <h1 className="text-3xl font-bold mb-3">{blog.title}</h1>
 
-      <div className="flex items-center mb-4">
-        <div className="flex items-center gap-3 mt-3">
+      <div className="flex flex-wrap items-center justify-between mb-5 gap-4">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center w-[40px] h-[40px] bg-orange-400 text-white rounded-full font-semibold text-lg">
+            {blog?.author?.name?.substring(0, 1)}
+          </div>
+          <p className="font-medium text-gray-700">{blog?.author?.name}</p>
         </div>
-        <span className="text-xl bg-orange-400 px-4 py-1 rounded-full text-white">
+
+        <span className="text-sm bg-pink-200 px-3 py-1 rounded-full text-[#BE5985] font-medium">
           {blog.category}
         </span>
 
-        <div className="flex items-center gap-2 my-2 ml-14">
-          <div className="flex items-center justify-center font-semibold w-[35px] h-[35px] bg-orange-300 text-center text-white rounded-full text-xl">
-            {blog?.author?.name?.substring(0, 1)}
-          </div>
-          <div>
-            <p>{blog?.author?.name}</p>
-            {/* <p>{blog?.author?.email}</p> */}
-          </div>
+        <div className="flex items-center gap-4 text-gray-600">
+          {/* read count */}
+          <span className="flex items-center gap-1">
+            <FaEye className="text-pink-500" /> {blog.viewCount || 0}
+          </span>
+
+          {/* like button */}
+          <button
+            onClick={toggleLike}
+            className="flex items-center gap-1 hover:scale-110 transition-transform"
+          >
+            {liked ? (
+              <FaThumbsUp className="text-blue-600 text-lg" />
+            ) : (
+              <FaRegThumbsUp className="text-gray-500 text-lg hover:text-blue-600" />
+            )}
+            <span className="font-medium text-gray-700">{likeCount}</span>
+          </button>
         </div>
       </div>
 
-      <MarkdownEditor.Markdown source={blog.content} />
+      <div className="prose max-w-none">
+        <MarkdownEditor.Markdown source={blog.content} />
+      </div>
 
-      {/* Comment Section */}
+      {/* Comment  */}
       <div className="mt-10">
         <h2 className="text-2xl font-semibold mb-4">Comments</h2>
 
@@ -116,7 +154,7 @@ function ReadBlog() {
           </button>
         </div>
 
-        {/* Show Comments */}
+        {/* show Comments */}
         <div className="space-y-4">
           {comments.length > 0 ? (
             comments.map((comment) => (
