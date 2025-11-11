@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { getCurrentUser } from "../util";
+import logo from "./../../public/blog-logo.png";
 
 function Navbar() {
     const [user, setUser] = useState(null);
@@ -22,7 +23,7 @@ function Navbar() {
                 className="flex items-center gap-2 hover:opacity-90 transition"
             >
                 <img
-                    src="/blog-logo.png"
+                    src={logo}
                     alt="logo"
                     className="w-8 h-8 rounded-full shadow-sm"
                 />
