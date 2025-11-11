@@ -22,7 +22,7 @@ function ReadBlog() {
       );
       const data = response.data.data;
       setBlog(data);
-      setLikeCount(data.likes || 0);
+      setLikeCount(data.thumbLikes || data.totalThumbLikes || data.likes || 0);
     } catch (error) {
       console.log(error);
     }

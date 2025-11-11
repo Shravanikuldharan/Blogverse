@@ -40,9 +40,23 @@ function BlogCard({
     setLiked(storedLikes.includes(slug));
   }, [slug]);
 
+  useEffect(() => {
+    const fetchThumbCount = async () => {
+      try {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/blogs/${slug}`);
+        if (res.data.success) {
+          setThumbCount(res.data.data.thumbLikes || res.data.data.totalThumbLikes || res.data.data.likes || 0);
+        }
+      } catch (err) {
+        console.error("Error fetching thumb count:", err);
+      }
+    };
+    fetchThumbCount();
+  }, [slug]);
+
   const toggleHeart = async () => {
     if (!isLoggedIn || !localStorage.getItem("token")) {
-      toast.error("You’ve been logged out. Please log in to use favorites ❤️");
+      toast.error("You’ve been logged out. Please log in to use favorites");
       return;
     }
 
@@ -55,7 +69,6 @@ function BlogCard({
 
       if (response.data.success) {
         setLiked(response.data.liked);
-
         const storedLikes = JSON.parse(localStorage.getItem("favorites")) || [];
         let updatedLikes;
 
@@ -66,7 +79,6 @@ function BlogCard({
           updatedLikes = storedLikes.filter((s) => s !== slug);
           toast("Removed from favorites💔", { duration: 1500 });
         }
-
         localStorage.setItem("favorites", JSON.stringify(updatedLikes));
       }
     } catch (error) {
@@ -142,8 +154,7 @@ function BlogCard({
       <div className="flex items-center gap-6 text-gray-600 mb-4">
         <button
           onClick={toggleHeart}
-          className="flex items-center gap-1 hover:scale-110 transition-transform focus:outline-none"
-          title={liked ? "Remove from Favorites" : "Add to Favorites"}
+          className="flex cursor-pointer items-center gap-1 hover:scale-110 transition-transform focus:outline-none"
         >
           {liked ? (
             <FaHeart className="text-red-500 text-lg" />
@@ -154,7 +165,7 @@ function BlogCard({
 
         <button
           onClick={handleThumbLike}
-          className="flex items-center gap-1 hover:scale-110 transition-transform focus:outline-none"
+          className="flex cursor-pointer items-center gap-1 hover:scale-110 transition-transform focus:outline-none"
         >
           {thumbLiked ? (
             <FaThumbsUp className="text-blue-600 text-lg" />
