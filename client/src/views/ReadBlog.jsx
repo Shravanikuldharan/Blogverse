@@ -12,8 +12,17 @@ function ReadBlog() {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
 
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
+  const [thumbLiked, setThumbLiked] = useState(false);
+  const [thumbCount, setThumbCount] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setIsLoggedIn(!!localStorage.getItem("token"));
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
   const fetchBlog = async () => {
     try {
@@ -22,30 +31,51 @@ function ReadBlog() {
       );
       const data = response.data.data;
       setBlog(data);
-      setLikeCount(data.thumbLikes || data.totalThumbLikes || data.likes || 0);
+      setThumbCount(
+        data.thumbLikes || data.totalThumbLikes || data.likes || 0
+      );
     } catch (error) {
       console.log(error);
     }
   };
 
-  const toggleLike = async () => {
+  useEffect(() => {
+    const storedThumbLikes =
+      JSON.parse(localStorage.getItem("thumbLikedBlogs")) || [];
+    setThumbLiked(storedThumbLikes.includes(slug));
+  }, [slug]);
+
+  const handleThumbLike = async () => {
+    if (!isLoggedIn || !localStorage.getItem("token")) {
+      toast.error("You’ve been logged out. Please log in to like 👍");
+      return;
+    }
+
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/blogs/${slug}/like`,
+        `${import.meta.env.VITE_API_URL}/blogs/${slug}/thumb-like`,
         {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
 
       if (response.data.success) {
-        setLiked(response.data.liked);
-        setLikeCount(response.data.totalLikes);
+        setThumbLiked(true);
+        setThumbCount(response.data.totalThumbLikes);
+        toast.success("You liked this post 👍", { duration: 1500 });
+
+        const storedThumbLikes =
+          JSON.parse(localStorage.getItem("thumbLikedBlogs")) || [];
+        const updatedThumbLikes = [...new Set([...storedThumbLikes, slug])];
+        localStorage.setItem("thumbLikedBlogs", JSON.stringify(updatedThumbLikes));
       }
     } catch (error) {
-      toast.error("You need to log in to like this post.");
+      if (error.response?.status === 401) {
+        toast.error("Session expired. Please log in again");
+        localStorage.clear();
+        setIsLoggedIn(false);
+      } else {
+        toast.error("Error increasing like count.");
+      }
     }
   };
 
@@ -110,22 +140,20 @@ function ReadBlog() {
         </span>
 
         <div className="flex items-center gap-4 text-gray-600">
-          {/* read count */}
           <span className="flex items-center gap-1">
             <FaEye className="text-pink-500" /> {blog.viewCount || 0}
           </span>
 
-          {/* like button */}
           <button
-            onClick={toggleLike}
+            onClick={handleThumbLike}
             className="flex items-center gap-1 hover:scale-110 transition-transform"
           >
-            {liked ? (
+            {thumbLiked ? (
               <FaThumbsUp className="text-blue-600 text-lg" />
             ) : (
               <FaRegThumbsUp className="text-gray-500 text-lg hover:text-blue-600" />
             )}
-            <span className="font-medium text-gray-700">{likeCount}</span>
+            <span className="font-medium text-gray-700">{thumbCount}</span>
           </button>
         </div>
       </div>
@@ -134,7 +162,7 @@ function ReadBlog() {
         <MarkdownEditor.Markdown source={blog.content} />
       </div>
 
-      {/* Comment  */}
+      {/*comments */}
       <div className="mt-10">
         <h2 className="text-2xl font-semibold mb-4">Comments</h2>
 
