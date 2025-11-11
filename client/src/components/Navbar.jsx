@@ -22,7 +22,7 @@ function Navbar() {
                 className="flex items-center gap-2 hover:opacity-90 transition"
             >
                 <img
-                    src="/src/assets/blog-logo.png"
+                    src="./src/assets/blog-logo.png"
                     alt="logo"
                     className="w-8 h-8 rounded-full shadow-sm"
                 />
