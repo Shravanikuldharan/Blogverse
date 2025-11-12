@@ -9,7 +9,8 @@ import { BLOG_CATEGORIES } from "./../constants";
 function EditBlog() {
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState(BLOG_CATEGORIES[0]);
+  const [category, setCategory] = useState(BLOG_CATEGORIES[0].name);
+
   const { slug } = useParams();
 
   const loadBlog = async () => {
@@ -94,7 +95,7 @@ function EditBlog() {
         onChange={(e) => setTitle(e.target.value)}
       />
 
-      <select
+      {/* <select
         value={category}
         onChange={(e) => setCategory(e.target.value)}
         className="border p-2 my-4"
@@ -106,6 +107,18 @@ function EditBlog() {
             </option>
           );
         })}
+      </select> */}
+
+      <select
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+        className="border p-2 my-4 w-full rounded"
+      >
+        {BLOG_CATEGORIES.map((cate, index) => (
+          <option key={cate.name + index} value={cate.name}>
+            {cate.name}
+          </option>
+        ))}
       </select>
 
       <MarkdownEditor

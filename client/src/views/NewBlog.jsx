@@ -58,7 +58,7 @@ function NewBlog() {
         onChange={(e) => setTitle(e.target.value)}
       />
 
-      <select
+      {/* <select
         value={category}
         onChange={(e) => setCategory(e.target.value)}
         className="border p-2 my-4"
@@ -70,7 +70,18 @@ function NewBlog() {
             </option>
           );
         })}
-      </select>
+      </select> */}
+      <select
+  value={category}
+  onChange={(e) => setCategory(e.target.value)}
+  className="border p-2 my-4 w-full rounded"
+>
+  {BLOG_CATEGORIES.map((cate, index) => (
+    <option key={cate.name + index} value={cate.name}>
+      {cate.name}
+    </option>
+  ))}
+</select>
 
       <MarkdownEditor
         value={content}

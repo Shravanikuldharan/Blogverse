@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import BlogCard from "../components/BlogCard";
-import { getCurrentUser } from "./../util";
+import { getCurrentUser } from "./../util.js";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 function AllBlogs() {
   const [user, setUser] = useState(null);
@@ -28,50 +29,53 @@ function AllBlogs() {
   }, [user]);
 
   return (
-    <div className="container mx-auto p-4">
-      <Navbar />
+    <>
+      <div className="container mx-auto p-4">
+        <Navbar />
 
-      {user && (
-        <h2 className="text-lg text-gray-700 font-medium mb-6">
-          Hello, <span className="font-semibold">{user.name}</span> 👋
-        </h2>
-      )}
+        {user && (
+          <h2 className="text-lg text-gray-700 font-medium mb-6">
+            Hello <span className="font-semibold text-orange-500">{user.name}</span>!
+          </h2>
+        )}
 
-      {blogs.length === 0 ? (
-        <p className="text-gray-500 text-center mt-10">
-          No blogs found yet. Create your first one!
-        </p>
-      ) : (
-        blogs.map((blog) => {
-          const {
-            _id,
-            title,
-            author,
-            updatedAt,
-            publishedAt,
-            status,
-            category,
-            slug,
-            viewCount,
-          } = blog;
+        {blogs.length === 0 ? (
+          <p className="text-gray-500 text-center mt-10">
+            No blogs found yet. Create your first one!
+          </p>
+        ) : (
+          blogs.map((blog) => {
+            const {
+              _id,
+              title,
+              author,
+              updatedAt,
+              publishedAt,
+              status,
+              category,
+              slug,
+              viewCount,
+            } = blog;
 
-          return (
-            <BlogCard
-              key={_id}
-              title={title}
-              author={author}
-              updatedAt={updatedAt}
-              publishedAt={publishedAt}
-              status={status}
-              category={category}
-              slug={slug}
-              viewCount={viewCount}
-              initialLikes={blog.likes}
-            />
-          );
-        })
-      )}
-    </div>
+            return (
+              <BlogCard
+                key={_id}
+                title={title}
+                author={author}
+                updatedAt={updatedAt}
+                publishedAt={publishedAt}
+                status={status}
+                category={category}
+                slug={slug}
+                viewCount={viewCount}
+                initialLikes={blog.likes}
+              />
+            );
+          })
+        )}
+      </div>
+      <Footer />
+    </>
   );
 }
 
