@@ -26,9 +26,13 @@ function ReadBlog() {
 
   const fetchBlog = async () => {
     try {
+      // const response = await axios.get(
+      //   `${import.meta.env.VITE_API_URL}/blogs/${slug}`
+      // );
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/blogs/${slug}`
+        `${import.meta.env.VITE_API_URL}/blogs/${slug}?view=true`
       );
+
       const data = response.data.data;
       setBlog(data);
       setThumbCount(
@@ -42,7 +46,7 @@ function ReadBlog() {
   useEffect(() => {
     const storedThumbLikes =
       JSON.parse(localStorage.getItem("thumbLikedBlogs")) || [];
-    setThumbLiked(storedThumbLikes.includes(slug));
+      setThumbLiked(storedThumbLikes.includes(slug));
   }, [slug]);
 
   const handleThumbLike = async () => {

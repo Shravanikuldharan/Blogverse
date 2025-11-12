@@ -27,6 +27,19 @@ function BlogCard({
   const [thumbCount, setThumbCount] = useState(initialThumbLikes);
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
 
+
+  useEffect(() => {
+    const increaseViewCount = async () => {
+      try {
+        await axios.post(`${import.meta.env.VITE_API_URL}/blogs/${slug}/view`);
+      } catch (error) {
+        console.error("Error increasing view count:", error);
+      }
+    };
+    increaseViewCount();
+  }, [slug]);
+
+
   useEffect(() => {
     const handleStorageChange = () => {
       setIsLoggedIn(!!localStorage.getItem("token"));

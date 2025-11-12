@@ -62,15 +62,19 @@ const jwtCheck = (req, res, next) => {
 
 const increaseViewCount = async (req, res, next) => {
   const { slug } = req.params;
+  const shouldIncrease = req.query.view === "true"; 
 
-  try {
-    const blog = await Blog.findOne({ slug });
-    if (blog) {
-      blog.viewCount += 1;
-      await blog.save();
+  if (shouldIncrease) {
+    try {
+      const blog = await Blog.findOneAndUpdate(
+        { slug },
+        { $inc: { viewCount: 1 } },
+        { new: true }
+      );
+      if (!blog) console.warn(`Blog not found for slug: ${slug}`);
+    } catch (error) {
+      console.error("Error increasing view count:", error);
     }
-  } catch (error) {
-    console.error("Error increasing view count:", error);
   }
 
   next();
