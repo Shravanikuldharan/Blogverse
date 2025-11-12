@@ -34,8 +34,8 @@ function AllBlogs() {
         <Navbar />
 
         {user && (
-          <h2 className="text-lg text-gray-700 font-medium mb-6">
-            Hello <span className="font-semibold text-orange-500">{user.name}</span>!
+          <h2 className="ml-10 mt-10 text-lg text-gray-700 font-medium mb-6">
+            Hello <span className="font-semibold text-orange-500">{user.name}</span> !
           </h2>
         )}
 

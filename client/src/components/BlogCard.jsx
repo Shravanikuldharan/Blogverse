@@ -152,7 +152,7 @@ function BlogCard({
   };
 
   return (
-    <div className="flex flex-col md:flex-row bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 mb-6 overflow-hidden">
+    <div className="m-10 flex flex-col md:flex-row bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 mb-10 overflow-hidden">
       <Toaster />
 
       <div className="relative w-full md:w-1/3 h-52 md:h-auto">
