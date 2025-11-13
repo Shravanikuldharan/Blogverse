@@ -5,6 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useParams } from "react-router";
 import Navbar from "../components/Navbar";
 import { BLOG_CATEGORIES } from "./../constants";
+import { FiEdit3, FiSave, FiUploadCloud } from "react-icons/fi";
 
 function EditBlog() {
   const [content, setContent] = useState("");
@@ -36,23 +37,17 @@ function EditBlog() {
     try {
       const response = await axios.put(
         `${import.meta.env.VITE_API_URL}/blogs/${slug}`,
+        { title, content, category },
         {
-          title,
-          content,
-          category,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
 
       if (response?.data?.success) {
-        toast.success("Blog saved successfully");
+        toast.success("Blog updated successfully");
         setTimeout(() => {
           window.location.href = "/";
-        }, 2000);
+        }, 1500);
       }
     } catch (err) {
       toast.error(err?.response?.data?.message || "Error updating blog");
@@ -65,9 +60,7 @@ function EditBlog() {
         `${import.meta.env.VITE_API_URL}/blogs/${slug}/publish`,
         {},
         {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
 
@@ -75,7 +68,7 @@ function EditBlog() {
         toast.success("Blog published successfully");
         setTimeout(() => {
           window.location.href = "/";
-        }, 2000);
+        }, 1500);
       }
     } catch (err) {
       toast.error(err?.response?.data?.message || "Error publishing blog");
@@ -83,67 +76,87 @@ function EditBlog() {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="min-h-screen bg-[#F0FAFF]">
       <Navbar />
-      <h1>Edit Blog</h1>
 
-      <input
-        type="text"
-        placeholder="Blog Title"
-        className="border p-2 w-full my-4"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+      <div className="max-w-5xl mx-auto p-6 mt-6">
+        <h1 className="text-3xl font-bold text-[#0077b6] mb-4 tracking-wide flex items-center gap-2">
+          <FiEdit3 className="text-[#0077b6]" />
+          Edit Blog
+        </h1>
 
-      {/* <select
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        className="border p-2 my-4"
-      >
-        {BLOG_CATEGORIES.map((cate) => {
-          return (
-            <option key={cate} value={cate}>
-              {cate}
-            </option>
-          );
-        })}
-      </select> */}
+        <div className="bg-white shadow-lg border border-[#D5EFFF] rounded-2xl p-6 space-y-6">
+          <div className="flex flex-col md:flex-row gap-6 w-full">
+            <div className="flex-1">
+              <label className="text-gray-700 font-medium block mb-1">
+                Blog Title
+              </label>
+              <input
+                type="text"
+                placeholder="Update blog title..."
+                className="w-full p-3 border border-[#A0E9FF] rounded-lg 
+                  focus:ring-2 focus:ring-[#00A9FF] outline-none shadow-sm"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </div>
 
-      <select
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        className="border p-2 my-4 w-full rounded"
-      >
-        {BLOG_CATEGORIES.map((cate, index) => (
-          <option key={cate.name + index} value={cate.name}>
-            {cate.name}
-          </option>
-        ))}
-      </select>
+            <div className="w-full md:w-1/5">
+              <label className="text-gray-700 font-medium block mb-1">
+                Blog Category
+              </label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full p-3 border border-[#A0E9FF] rounded-lg bg-white 
+                  focus:ring-2 focus:ring-[#00A9FF] outline-none shadow-sm"
+              >
+                {BLOG_CATEGORIES.map((cate, index) => (
+                  <option key={cate.name + index} value={cate.name}>
+                    {cate.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-      <MarkdownEditor
-        value={content}
-        onChange={(value) => {
-          setContent(value);
-        }}
-        height="500px"
-      />
+          <div>
+            <label className="text-gray-700 font-medium block mb-2">
+              Blog Content
+            </label>
 
-      <button
-        className="bg-blue-500 text-white px-4 py-2 mt-4 rounded cursor-pointer"
-        type="button"
-        onClick={updateBlog}
-      >
-        Save
-      </button>
+            <div className="border border-[#A0E9FF] rounded-xl overflow-hidden shadow">
+              <MarkdownEditor
+                value={content}
+                onChange={(value) => setContent(value)}
+                height="500px"
+              />
+            </div>
+          </div>
 
-      <button
-        className="bg-green-500 text-white px-4 py-2 mt-4 ml-4 rounded cursor-pointer"
-        type="button"
-        onClick={publishBlog}
-      >
-        Publish
-      </button>
+          <div className="flex justify-between pt-4">
+            <button
+              onClick={updateBlog}
+              className="cursor-pointer bg-gradient-to-r from-[#0077b6] to-[#00b4d8]
+                text-white px-6 py-3 rounded-lg shadow-md hover:shadow-xl 
+                hover:scale-[1.03] transition font-semibold flex items-center gap-2"
+            >
+              <FiSave className="text-xl" />
+              Save Changes
+            </button>
+
+            <button
+              onClick={publishBlog}
+              className="cursor-pointer bg-gradient-to-r from-[#28A745] to-[#7DFFB2]
+                text-white px-6 py-3 rounded-lg shadow-md hover:shadow-xl 
+                hover:scale-[1.03] transition font-semibold flex items-center gap-2"
+            >
+              <FiUploadCloud className="text-xl" />
+              Publish
+            </button>
+          </div>
+        </div>
+      </div>
 
       <Toaster />
     </div>
