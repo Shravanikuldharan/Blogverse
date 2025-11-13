@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { getCurrentUser } from "../util";
 import logo from "./../../public/blog-logo.png";
-import { FaUser, FaSignOutAlt, FaPen, FaHeart } from "react-icons/fa";
+
+// NEW ICONS
+import { FiEdit, FiHeart } from "react-icons/fi";
 
 function Navbar() {
   const [user, setUser] = useState(null);
@@ -18,68 +20,77 @@ function Navbar() {
   };
 
   return (
-    <nav className="bg-[#F5EFFF] py-4 px-8 rounded-b-2xl flex justify-between items-center shadow-md">
-      {/* Logo and Title */}
-      <div className="flex items-center gap-3">
-        <img src={logo} alt="logo" className="w-10 h-10 rounded-full" />
-        <span className="text-2xl font-bold text-[#BE5985]">Blogverse</span>
-      </div>
+    <nav className="bg-[#f3f6fd] py-4 px-8 rounded-b-2xl shadow-md flex justify-between items-center border-b border-[#d8e7ff]">
+      
+     <div className="flex items-center gap-3">
+  <Link to="/" className="flex items-center gap-3">
+    <img 
+      src={logo} 
+      className="w-10 h-10 rounded-full shadow-sm" 
+    />
 
-      {/* Navigation Links */}
-      <div className="flex items-center gap-4 text-sm md:text-base">
+    <span className="text-2xl font-extrabold bg-gradient-to-r 
+      from-[#0077b6] to-[#00b4d8] text-transparent bg-clip-text tracking-wide">
+      Blogverse
+    </span>
+  </Link>
+</div>
+
+
+      {/* Right Side Links */}
+      <div className="flex items-center gap-6 text-sm md:text-base">
+
         {user ? (
           <>
-            {/* Create Button */}
+            {/* Create Button with ICON */}
             <Link
               to="/new"
-              className="text-[#BE5985] hover:bg-[#F8E7F6] hover:text-[#BE5985] px-4 py-1.5 rounded-md font-medium transition duration-300"
+              className="flex items-center gap-2 text-[#0077b6] hover:bg-[#e3f5ff] px-4 py-1.5 rounded-md font-semibold transition"
             >
-              Create
+              <FiEdit className="text-lg" /> Create
             </Link>
 
-            {/* Favorites Button */}
+            {/* Favorites Button with ICON */}
             <Link
               to="/favourites"
-              className="text-[#BE5985] hover:bg-[#F8E7F6] hover:text-[#BE5985] px-4 py-1.5 rounded-md font-medium transition duration-300"
+              className="flex items-center gap-2 text-[#0077b6] hover:bg-[#e3f5ff] px-4 py-1.5 rounded-md font-semibold transition"
             >
-              Favorites
+              <FiHeart className="text-lg" /> Favorites
             </Link>
 
-            {/* User Info */}
+            {/* User Bubble */}
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-[#BE5985] text-white rounded-full flex items-center justify-center text-lg">
+              <div className="w-9 h-9 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white rounded-full flex items-center justify-center text-lg shadow-md font-bold">
                 {user.name?.substring(0, 1).toUpperCase()}
               </div>
-              <span className="text-[#BE5985]">{user.name}</span>
+              <span className="text-[#0077b6] font-medium">{user.name}</span>
             </div>
 
-            {/* Logout Button */}
             <button
               onClick={handleLogout}
-              className="bg-white text-[#BE5985] hover:bg-[#F8E7F6] hover:text-[#BE5985] px-4 py-1.5 rounded-md font-medium transition duration-300"
+              className="cursor-pointer bg-white border border-[#00b4d8] text-[#0077b6] hover:bg-[#e3f5ff] px-4 py-1.5 rounded-md font-semibold transition"
             >
               Logout
             </button>
           </>
         ) : (
           <>
-            {/* Login Button */}
             <Link
               to="/login"
-              className="bg-[#BE5985] text-white hover:bg-[#a94d75] px-4 py-1.5 rounded-md font-medium transition duration-300"
+              className="bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white px-4 py-1.5 rounded-md font-semibold shadow-md hover:shadow-lg hover:scale-[1.02] transition"
             >
               Login
             </Link>
 
-            {/* Sign Up Button */}
             <Link
               to="/signup"
-              className="border border-[#BE5985] text-[#BE5985] hover:bg-[#BE5985] hover:text-white px-4 py-1.5 rounded-md font-medium transition duration-300"
+              className="border border-[#00b4d8] text-[#0077b6] hover:bg-[#e3f5ff] px-4 py-1.5 rounded-md font-semibold transition"
             >
               Sign Up
             </Link>
           </>
         )}
+
       </div>
     </nav>
   );
