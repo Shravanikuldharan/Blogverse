@@ -7,11 +7,9 @@ function Footer() {
     <footer className="w-full bg-[#f3f6fd] text-[#0077b6] border-t border-[#cfe8ff] mt-10 py-6">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between px-6 sm:px-10 text-center sm:text-left gap-4">
 
-        {/* Logo + Text */}
         <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-start">
           <img
-            src="/blog-logo.png"
-            alt="Blogverse Logo"
+            src="/blog-logo.gif"
             className="w-9 h-9 object-contain rounded-full shadow-sm"
           />
 
@@ -28,7 +26,6 @@ function Footer() {
           </div>
         </div>
 
-        {/* Social Icons */}
         <div className="flex items-center gap-6">
           <a
             href="https://github.com/shravanikuldharan"
@@ -56,7 +53,6 @@ function Footer() {
         </div>
       </div>
 
-      {/* Bottom Copyright */}
       <div className="text-center text-xs text-[#6b7280] mt-4">
         © {new Date().getFullYear()} Blogverse — All Rights Reserved
       </div>
