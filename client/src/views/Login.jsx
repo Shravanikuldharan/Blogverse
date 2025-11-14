@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router";
-import loginImg from "../assets/image.png";
+import loginImg from "../assets/login.png";
 import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 
 function Login() {

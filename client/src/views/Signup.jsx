@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import signupImg from "../assets/image.png";
+import signupImg from "../assets/signup.png";
 
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 
