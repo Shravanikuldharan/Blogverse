@@ -129,17 +129,24 @@ function BlogCard({
       border border-[#E8EEF4] overflow-hidden w-[95%] max-w-5xl my-8 flex flex-col md:flex-row">
 
         {/* category */}
-        {category && categoryData && (
-          <span
-            className="absolute top-3 right-3 flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium shadow"
-            style={{ backgroundColor: categoryData.bg, color: categoryData.text }}
-          >
-            {CategoryIcon && (
-              <CategoryIcon className="text-sm" style={{ color: categoryData.iconColor }} />
-            )}
-            {category}
-          </span>
-        )}
+        <span
+          className="absolute top-6 right-[-6px] flex items-center gap-1 px-3 py-1 text-xs font-medium shadow-md"
+          style={{
+            backgroundColor: categoryData.bg,
+            color: categoryData.text,
+            // border: `0.1px solid ${categoryData.text}`,
+            borderRadius: "20px 0px 0px 20px"
+          }}
+        >
+          {CategoryIcon && (
+            <CategoryIcon
+              className="text-sm"
+              style={{ color: categoryData.iconColor }}
+            />
+          )}
+          {category}
+        </span>
+
 
         {/* img */}
         <div className="relative md:w-2/5 w-full h-60 md:h-auto group">
@@ -181,16 +188,7 @@ function BlogCard({
 
           {/* title */}
           <h2 className="text-2xl font-bold text-gray-900 mb-3">{title}</h2>
-
-          {/* {shortDescription && (
-  <p className="text-gray-600 text-sm mb-3">{shortDescription}</p>
-)} */}
-
-{shortDescription && (
-  <p className="text-gray-600 mb-3">
-    {shortDescription}
-  </p>
-)}
+          
           {/* date | stats | button */}
           <div className="flex items-center justify-between w-full mt-4 pt-4 border-t border-gray-200">
 
