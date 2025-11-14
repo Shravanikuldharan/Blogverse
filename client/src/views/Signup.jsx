@@ -33,7 +33,7 @@ function Signup() {
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-[#f8f9ff] overflow-hidden">
+    <div className="flex min-h-screen w-full bg-[#fff] overflow-hidden">
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center px-6 md:px-16 relative overflow-hidden bg-white">
         <h1 className="text-4xl font-extrabold text-gray-800 mb-4 tracking-wide">
           <span className="bg-gradient-to-r from-[#0077b6] to-[#00b4d8] bg-clip-text text-transparent">
@@ -111,7 +111,7 @@ function Signup() {
         </p>
       </div>
 
-      <div className="hidden md:flex w-1/2 items-center justify-center bg-[#f3f6fd]">
+      <div className="hidden md:flex w-1/2 items-center justify-center bg-[#F0FAFF]">
         <img
           src={signupImg}
           className="w-[70%] h-auto object-contain"

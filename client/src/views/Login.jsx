@@ -36,8 +36,8 @@ function Login() {
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-[#f8f9ff] overflow-hidden">
-      <div className="hidden md:flex w-1/2 items-center justify-center bg-[#f3f6fd]">
+    <div className="flex min-h-screen w-full bg-[#F0FAFF] overflow-hidden">
+      <div className="hidden md:flex w-1/2 items-center justify-center bg-[#F0FAFF]">
         <img
           src={loginImg}
           className="w-[70%] h-auto object-contain"
