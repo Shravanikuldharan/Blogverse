@@ -442,15 +442,26 @@ function BlogCard({
             </div>
           </div>
 
-          {category && (
+          {category && categoryData && (
             <div className="flex justify-end mb-2">
-              <span className="flex items-center gap-1 bg-[#FFE5F2] text-[#BE5985] px-3 py-1 
-                rounded-full text-xs font-medium shadow-sm top-2 right-2">
-                {CategoryIcon && <CategoryIcon className="text-sm" />}
+              <span
+                className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium shadow-sm"
+                style={{
+                  backgroundColor: categoryData.bg,
+                  color: categoryData.text
+                }}
+              >
+                {CategoryIcon && (
+                  <CategoryIcon
+                    className="text-sm"
+                    style={{ color: categoryData.iconColor }}
+                  />
+                )}
                 {category}
               </span>
             </div>
           )}
+
 
           <h2 className="text-2xl font-bold text-gray-900 leading-snug mb-2">
             {title}
