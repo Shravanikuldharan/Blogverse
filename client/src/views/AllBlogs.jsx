@@ -30,11 +30,11 @@ function AllBlogs() {
 
   return (
     <>
-      <div className="container mx-auto p-4 pb-30">
+      <div className="container mx-auto p-4 pb-6">
         <Navbar />
 
         {user && (
-          <h2 className="ml-10 mt-10 text-lg text-gray-700 font-medium mb-6">
+          <h2 className="ml-10 mt-8 text-lg text-gray-700 font-medium mb-6">
             Hello <span className="font-semibold text-orange-500">{user.name}</span> !
           </h2>
         )}

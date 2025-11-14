@@ -25,3 +25,14 @@ body {
     margin: 0;
     padding: 0;
 }
+
+.wmde-markdown {
+  background-color: white !important;
+  color: #1f2937 !important; 
+}
+
+.wmde-markdown pre,
+.wmde-markdown code {
+  background-color: #f4f4f4 !important; 
+  color: #111 !important;
+}

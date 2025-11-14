@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Navbar from "../components/Navbar";
 import toast, { Toaster } from "react-hot-toast";
-import { FaThumbsUp, FaRegThumbsUp, FaEye } from "react-icons/fa";
+import { FaThumbsUp, FaRegThumbsUp, FaEye, FaComment, FaRegComment } from "react-icons/fa";
+import { BLOG_CATEGORIES } from "../constants";
+import Footer from "../components/Footer";
 
 function ReadBlog() {
   const { slug } = useParams();
@@ -16,42 +18,43 @@ function ReadBlog() {
   const [thumbCount, setThumbCount] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
 
-  useEffect(() => {
-    const handleStorageChange = () => {
-      setIsLoggedIn(!!localStorage.getItem("token"));
-    };
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+  const categoryData = BLOG_CATEGORIES.find(
+    (cat) => cat.name.toLowerCase() === blog?.category?.toLowerCase()
+  );
 
   const fetchBlog = async () => {
     try {
-      // const response = await axios.get(
-      //   `${import.meta.env.VITE_API_URL}/blogs/${slug}`
-      // );
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/blogs/${slug}?view=true`
       );
-
       const data = response.data.data;
       setBlog(data);
-      setThumbCount(
-        data.thumbLikes || data.totalThumbLikes || data.likes || 0
-      );
+
+      setThumbCount(data.thumbLikes || data.totalThumbLikes || data.likes || 0);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const loadComments = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/blogs/${slug}/comments`
+      );
+      setComments(response.data.comments || []);
+    } catch (error) {
+      toast.error("Failed to load comments");
+    }
+  };
+
   useEffect(() => {
-    const storedThumbLikes =
-      JSON.parse(localStorage.getItem("thumbLikedBlogs")) || [];
-      setThumbLiked(storedThumbLikes.includes(slug));
-  }, [slug]);
+    fetchBlog();
+    loadComments();
+  }, []);
 
   const handleThumbLike = async () => {
-    if (!isLoggedIn || !localStorage.getItem("token")) {
-      toast.error("You’ve been logged out. Please log in to like 👍");
+    if (!isLoggedIn) {
+      toast.error("Please log in to like 👍");
       return;
     }
 
@@ -65,155 +68,170 @@ function ReadBlog() {
       if (response.data.success) {
         setThumbLiked(true);
         setThumbCount(response.data.totalThumbLikes);
-        toast.success("You liked this post 👍", { duration: 1500 });
-
-        const storedThumbLikes =
-          JSON.parse(localStorage.getItem("thumbLikedBlogs")) || [];
-        const updatedThumbLikes = [...new Set([...storedThumbLikes, slug])];
-        localStorage.setItem("thumbLikedBlogs", JSON.stringify(updatedThumbLikes));
+        toast.success("You liked this post 👍");
       }
-    } catch (error) {
-      if (error.response?.status === 401) {
-        toast.error("Session expired. Please log in again");
-        localStorage.clear();
-        setIsLoggedIn(false);
-      } else {
-        toast.error("Error increasing like count.");
-      }
-    }
-  };
-
-  const loadComments = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/blogs/${slug}/comments`
-      );
-      setComments(response.data.comments || []);
-    } catch (error) {
-      toast.error("Error loading comments");
+    } catch {
+      toast.error("Error liking post");
     }
   };
 
   const addComment = async () => {
     if (!newComment.trim()) {
-      toast.error("Comment cannot be empty");
+      toast.error("Please write a comment");
       return;
     }
 
     try {
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API_URL}/blogs/${slug}/comments`,
         { content: newComment },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
-      toast.success(response.data.message);
+      toast.success("Comment added Successfully!");
       setNewComment("");
       loadComments();
-    } catch (error) {
-      toast.error("You need to log in to post a comment.");
+    } catch {
+      toast.error("Login required to comment");
     }
   };
 
-  useEffect(() => {
-    document.documentElement.setAttribute("data-color-mode", "light");
-    fetchBlog();
-    loadComments();
-  }, []);
-
   return (
-    <div className="container mx-auto p-4">
-      <Navbar />
-      <Toaster />
+    <>
+      <div className="pb-28 bg-white">
+        <Navbar />
+        <Toaster />
 
-      <h1 className="text-3xl font-bold mb-3">{blog.title}</h1>
+        <div className="max-w-5xl mx-auto mt-10 bg-white rounded-3xl shadow-lg border border-[#E8EEF4] overflow-hidden">
 
-      <div className="flex flex-wrap items-center justify-between mb-5 gap-4">
-        <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-[40px] h-[40px] bg-orange-400 text-white rounded-full font-semibold text-lg">
-            {blog?.author?.name?.substring(0, 1)}
-          </div>
-          <p className="font-medium text-gray-700">{blog?.author?.name}</p>
-        </div>
+          <div className="relative h-80 group">
+            <img
+              src={categoryData?.image}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
 
-        <span className="text-sm bg-pink-200 px-3 py-1 rounded-full text-[#BE5985] font-medium">
-          {blog.category}
-        </span>
-
-        <div className="flex items-center gap-4 text-gray-600">
-          <span className="flex items-center gap-1">
-            <FaEye className="text-pink-500" /> {blog.viewCount || 0}
-          </span>
-
-          <button
-            onClick={handleThumbLike}
-            className="flex items-center gap-1 hover:scale-110 transition-transform"
-          >
-            {thumbLiked ? (
-              <FaThumbsUp className="text-blue-600 text-lg" />
-            ) : (
-              <FaRegThumbsUp className="text-gray-500 text-lg hover:text-blue-600" />
-            )}
-            <span className="font-medium text-gray-700">{thumbCount}</span>
-          </button>
-        </div>
-      </div>
-
-      <div className="prose max-w-none">
-        <MarkdownEditor.Markdown source={blog.content} />
-      </div>
-
-      {/*comments */}
-      <div className="mt-10">
-        <h2 className="text-2xl font-semibold mb-4">Comments</h2>
-
-        <div className="bg-gray-50 p-4 rounded-xl shadow-sm mb-6">
-          <textarea
-            className="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
-            rows="3"
-            placeholder="Write your comment..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-          ></textarea>
-          <button
-            onClick={addComment}
-            className="mt-3 bg-orange-500 text-white px-5 py-2 rounded-lg hover:bg-orange-600 transition"
-          >
-            Post Comment
-          </button>
-        </div>
-
-        {/* show Comments */}
-        <div className="space-y-4">
-          {comments.length > 0 ? (
-            comments.map((comment) => (
-              <div
-                key={comment._id}
-                className="bg-white border border-gray-200 p-4 rounded-xl shadow-sm"
+            {categoryData && (
+              <span
+                className="absolute top-6 right-[-6px] px-4 py-1 flex items-center gap-2 shadow-md font-medium"
+                style={{
+                  backgroundColor: categoryData.bg,
+                  color: categoryData.text,
+                  border: `0.1px solid ${categoryData.text}`,
+                  borderRadius: "20px 0px 0px 20px",
+                }}
               >
-                <div className="flex items-center mb-2">
-                  <div className="w-10 h-10 bg-orange-300 text-white rounded-full flex items-center justify-center font-bold">
-                    {comment.user.name.substring(0, 1).toUpperCase()}
-                  </div>
-                  <div className="ml-3">
-                    <p className="font-semibold">{comment.user.name}</p>
+                <categoryData.icon style={{ color: categoryData.iconColor }} />
+                {blog.category}
+              </span>
+            )}
+          </div>
+
+          {/* title + author + stats */}
+          <div className="p-8 bg-white">
+
+            <h1 className="text-4xl font-bold text-orange-500 mb-8">
+              {blog.title}
+            </h1>
+
+            <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white rounded-full flex items-center justify-center text-xl font-semibold">
+                  {blog?.author?.name?.substring(0, 1)}
+                </div>
+                <p className="font-semibold text-gray-800">
+                  {blog?.author?.name}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-6 text-gray-700">
+                <span className="flex items-center gap-2">
+                  <FaEye className="text-[#0077b6]" />
+                  <span>{blog.viewCount || 0}</span>
+                </span>
+
+                <button onClick={handleThumbLike}
+                  className="flex items-center gap-2 hover:text-[#0077b6] transition">
+                  {thumbLiked ? <FaThumbsUp className="text-[#0077b6]" /> : <FaRegThumbsUp className="text-[#0077b6]" />}
+                  <span>{thumbCount}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* blog content  */}
+        <div className="max-w-5xl mx-auto mt-8 bg-white shadow-lg border border-[#E8EEF4] rounded-3xl p-8">
+          <MarkdownEditor.Markdown source={blog.content} className="prose max-w-none" />
+        </div>
+
+
+        {/* Comments */}
+        <div className="max-w-5xl mx-auto mt-16">
+          <h2 className="inline-flex items-center gap-2 text-2xl text-[#0077b6] font-semibold mb-4">
+            <FaRegComment className="text-[#0077b6]" />
+            Comments
+          </h2>
+
+          {/* add comment box */}
+          <div className="bg-white border border-gray-200 p-5 rounded-2xl shadow-sm mb-12 flex flex-col justify-between h-full">
+            <textarea
+              rows="3"
+              className="w-full border border-gray-300 rounded-xl p-3 focus:ring-[#0077b6] focus:ring-2 outline-none"
+              placeholder="Write your comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            ></textarea>
+
+            <button
+              onClick={addComment}
+              className="mt-3 bg-gradient-to-r from-[#0077b6] to-[#00b4d8]
+                text-white px-5 py-2 rounded-lg shadow-md hover:scale-[1.03] 
+                hover:shadow-lg transition font-medium cursor-pointer self-end"
+            >
+              Post Comment
+            </button>
+          </div>
+
+          {/* show comments */}
+          <div className="space-y-6">
+            {comments.length ? (
+              comments.map((c) => (
+                <div
+                  key={c._id}
+                  className="bg-white border border-[#E8EEF4] p-4 rounded-2xl shadow-sm hover:shadow-lg transition"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white 
+                       rounded-full flex items-center justify-center font-semibold">
+                        {c.user.name.substring(0, 1).toUpperCase()}
+                      </div>
+
+                      <div>
+                        <p className="font-semibold text-gray-800">{c.user.name}</p>
+                      </div>
+                    </div>
+
                     <p className="text-gray-500 text-sm">
-                      {new Date(comment.createdAt).toLocaleString()}
+                      {new Date(c.createdAt).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
                     </p>
                   </div>
+
+                  <p className="text-gray-700 ml-1">{c.content}</p>
                 </div>
-                <p className="ml-1 text-gray-700">{comment.content}</p>
-              </div>
-            ))
-          ) : (
-            <p className="text-gray-500">No comments yet. Be the first one!</p>
-          )}
+              ))
+            ) : (
+              <p className="text-gray-500">No comments yet.</p>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 }
 
