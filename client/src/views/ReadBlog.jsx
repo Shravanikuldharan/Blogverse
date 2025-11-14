@@ -97,7 +97,7 @@ function ReadBlog() {
 
   return (
     <>
-      <div className="pb-28 bg-white">
+      <div className="p-4 pb-6 bg-[#F0FAFF]">
         <Navbar />
         <Toaster />
 

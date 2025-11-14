@@ -47,7 +47,7 @@ function NewBlog() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F0FAFF]">
+    <div className="min-h-screen p-4 pb-6 bg-[#F0FAFF]">
       <Navbar />
 
       <div className="max-w-5xl mx-auto p-6 mt-6">

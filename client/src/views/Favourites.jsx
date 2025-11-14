@@ -3,6 +3,7 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import BlogCard from "../components/BlogCard";
 import toast from "react-hot-toast";
+import emptyFav from "../assets/fav.png";
 
 function Favorites() {
   const [blogs, setBlogs] = useState([]);
@@ -50,12 +51,19 @@ function Favorites() {
   return (
     <div className="container mx-auto p-4">
       <Navbar />
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">Your Favorite Blogs</h1>
 
       {blogs.length === 0 ? (
-        <p className="text-gray-500 text-center">
-          You haven’t liked any blogs yet. Click the ❤️ icon on a blog to add it here.
-        </p>
+        <div className="text-center">
+          <img
+            src={emptyFav}
+            className="w-100 m-auto mb-[-50px]"
+          />
+
+          <p className="text-gray-500 text-lg">
+            You haven’t liked any blogs yet. <br />
+            Click the ❤️ icon on a blog to add it here.
+          </p>
+        </div>
       ) : (
         blogs.map((blog) => (
           <BlogCard

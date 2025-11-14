@@ -5,10 +5,8 @@ import toast, { Toaster } from "react-hot-toast";
 import {
   FaHeart,
   FaRegHeart,
-  FaThumbsUp,
   FaRegThumbsUp,
   FaEye,
-  FaComment,
   FaRegComment,
 } from "react-icons/fa";
 import "../index.css";
@@ -18,7 +16,6 @@ function BlogCard({
   _id,
   title,
   author,
-  shortDescription,
   publishedAt,
   updatedAt,
   status,

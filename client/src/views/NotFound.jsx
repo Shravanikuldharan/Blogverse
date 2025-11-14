@@ -1,7 +1,7 @@
 import notFoundImg from "../assets/404.png"; 
 function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#F5F5F5] text-center ">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#F0FAFF] text-center ">
       <img
         src={notFoundImg}
         className="w-[500px] mb-4" 

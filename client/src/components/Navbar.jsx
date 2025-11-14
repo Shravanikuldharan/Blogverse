@@ -18,7 +18,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="bg-[#f3f6fd] py-4 px-8 rounded-b-2xl shadow-md flex justify-between items-center border-b border-[#d8e7ff]">
+    <nav className="bg-white py-4 px-8 rounded-2xl shadow-lg flex justify-between items-center">
 
       <div className="flex items-center gap-3">
         <Link to="/" className="flex items-center gap-3">
