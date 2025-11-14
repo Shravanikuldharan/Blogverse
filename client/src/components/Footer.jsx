@@ -4,7 +4,7 @@ import { Link } from "react-router";
 
 function Footer() {
   return (
-    <footer className="w-full bg-[#f3f6fd] text-[#0077b6] border-t border-[#cfe8ff] mt-10 py-6">
+    <footer className="w-full bg-[#f3f6fd] text-[#0077b6] border-t border-[#cfe8ff] mt-10 py-6 fixed bottom-0 left-0">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between px-6 sm:px-10 text-center sm:text-left gap-4">
 
         <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-start">
