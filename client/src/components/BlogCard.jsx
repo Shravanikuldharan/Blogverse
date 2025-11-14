@@ -9,6 +9,7 @@ import {
   FaRegThumbsUp,
   FaEye,
   FaComment,
+  FaRegComment,
 } from "react-icons/fa";
 import "../index.css";
 import { BLOG_CATEGORIES } from "../constants.js";
@@ -188,7 +189,7 @@ function BlogCard({
           {/* title */}
           <h2 className="text-2xl font-bold text-gray-900 hover:text-[#0077b6] transition duration-400 mb-3">
             {title}</h2>
-          
+
           {/* date | stats | button */}
           <div className="flex items-center justify-between w-full mt-4 pt-4 border-t border-gray-200">
 
@@ -200,21 +201,24 @@ function BlogCard({
               })}
             </span>
 
-            <div className="flex items-center justify-center gap-6 text-gray-500 text-sm flex-1">
+            <div className="flex items-center justify-center gap-6 text-md flex-1">
+
               <button
                 onClick={handleThumbLike}
-                className="flex items-center gap-1 hover:text-[#00A9FF] transition"
+                className="flex cursor-pointer items-center gap-1 transition"
               >
-                {thumbLiked ? <FaThumbsUp className="text-[#00A9FF]" /> : <FaRegThumbsUp />}
-                {thumbCount}
+                <FaRegThumbsUp className="text-[#0077b6]" />  
+                <span className="text-gray-700">{thumbCount}</span> 
               </button>
 
               <span className="flex items-center gap-1">
-                <FaComment className="text-green-600" /> {commentCount}
+                <FaRegComment className="text-[#0077b6]" /> 
+                <span className="text-gray-700">{commentCount}</span> 
               </span>
 
               <span className="flex items-center gap-1">
-                <FaEye className="text-[#00A9FF]" /> {viewCount || 0}
+                <FaEye className="text-[#0077b6]" /> 
+                <span className="text-gray-700">{viewCount || 0}</span>
               </span>
             </div>
 
@@ -222,17 +226,18 @@ function BlogCard({
               {status === "published" ? (
                 <Link
                   to={`/blog/${slug}`}
-                  className="bg-gradient-to-r from-[#00A9FF] to-[#89CFF3]
-                    text-white px-5 py-2 rounded-lg shadow-md hover:scale-[1.03] 
-                    hover:shadow-lg transition font-medium"
+                  className="bg-gradient-to-r from-[#0077b6] to-[#00b4d8]
+                    text-white px-5 py-2 rounded-lg shadow-md hover:scale-[1.04] 
+                    hover:shadow-lg transition font-medium cursor-pointer"
                 >
                   Read More
                 </Link>
               ) : (
                 <Link
                   to={`/edit/${slug}`}
-                  className="bg-gray-700 text-white px-5 py-2 rounded-lg 
-                     shadow-md hover:bg-gray-800 transition font-medium"
+                  className="bg-gray-600 text-white px-5 py-2 rounded-lg 
+                    shadow-md hover:bg-gray-700 transition font-medium 
+                    cursor-pointer"
                 >
                   Edit Blog
                 </Link>
