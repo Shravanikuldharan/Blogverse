@@ -152,7 +152,6 @@ function BlogCard({
         <div className="relative md:w-2/5 w-full h-60 md:h-auto group">
           <img
             src={categoryImage}
-            alt={category}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 group-hover:brightness-90"
           />
 
@@ -187,7 +186,8 @@ function BlogCard({
           </div>
 
           {/* title */}
-          <h2 className="text-2xl font-bold text-gray-900 mb-3">{title}</h2>
+          <h2 className="text-2xl font-bold text-gray-900 hover:text-[#0077b6] transition duration-400 mb-3">
+            {title}</h2>
           
           {/* date | stats | button */}
           <div className="flex items-center justify-between w-full mt-4 pt-4 border-t border-gray-200">
