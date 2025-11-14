@@ -4,7 +4,7 @@ import { Link } from "react-router";
 
 function Footer() {
   return (
-    <footer className="w-full bg-[#f3f6fd] text-[#0077b6] border-t border-[#cfe8ff] mt-10 py-6 fixed bottom-0 left-0">
+    <footer className="w-full bg-[#fff] text-[#0077b6] border-t border-[#cfe8ff] mt-10 py-6 fixed bottom-0 left-0">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between px-6 sm:px-10 text-center sm:text-left gap-4">
 
         <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-start">
@@ -20,8 +20,8 @@ function Footer() {
             >
               Blogverse
             </Link>
-            <span className="text-sm text-[#6b7280]">
-              — Your daily dose of blogs, stories & insights 🌿
+            <span className="text-sm italic text-[#6b7280]">
+              - Your daily dose of blogs, stories & insights 🌿
             </span>
           </div>
         </div>
@@ -51,10 +51,6 @@ function Footer() {
             <SiPeerlist className="text-2xl text-[#00b894]" />
           </a>
         </div>
-      </div>
-
-      <div className="text-center text-xs text-[#6b7280] mt-4">
-        © {new Date().getFullYear()} Blogverse — All Rights Reserved
       </div>
     </footer>
   );
