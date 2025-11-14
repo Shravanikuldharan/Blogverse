@@ -40,7 +40,7 @@ function AllBlogs() {
 
   return (
     <>
-      <div className="container bg-[#F0FAFF] mx-auto p-4 pb-6">
+      <div className="bg-[#F0FAFF] mx-auto p-4 pb-6">
         <Navbar />
 
        <Toaster />

@@ -123,8 +123,8 @@ function BlogCard({
     <div className="w-full flex justify-center">
       <Toaster />
 
-      <div className="mt-18 relative bg-white rounded-3xl shadow-lg hover:scale-[1.01] transition-transform duration-300
-      border border-[#E8EEF4] overflow-hidden w-[95%] max-w-5xl my-8 flex flex-col md:flex-row">
+      <div className="mt-12 relative bg-white rounded-3xl shadow-lg hover:scale-[1.01] transition-transform duration-300
+      border border-[#E8EEF4] overflow-hidden w-[95%] max-w-5xl my-2 flex flex-col md:flex-row">
 
         {/* category */}
         <span
