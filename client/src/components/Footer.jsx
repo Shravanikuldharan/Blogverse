@@ -20,7 +20,7 @@ function Footer() {
             >
               Blogverse
             </Link>
-            <span className="text-sm italic text-[#6b7280]">
+            <span className="text-sm font-normal italic text-[#6b7280]">
               - Your daily dose of blogs, stories & insights 🌿
             </span>
           </div>

@@ -26,6 +26,9 @@ body {
     padding: 0;
     background-color: #F0FAFF !important;
 }
+* {
+  font-family: "Quicksand", sans-serif;
+}
 
 .wmde-markdown {
   background-color: white !important;

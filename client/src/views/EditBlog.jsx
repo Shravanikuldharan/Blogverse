@@ -139,7 +139,7 @@ function EditBlog() {
               onClick={updateBlog}
               className="cursor-pointer bg-gradient-to-r from-[#0077b6] to-[#00b4d8]
                 text-white px-6 py-3 rounded-lg shadow-md hover:shadow-xl 
-                hover:scale-[1.03] transition font-semibold flex items-center gap-2"
+                hover:scale-[1.03] transition font-bold flex items-center gap-2"
             >
               <FiSave className="text-xl" />
               Save Changes
@@ -149,7 +149,7 @@ function EditBlog() {
               onClick={publishBlog}
               className="cursor-pointer bg-gradient-to-r from-[#28A745] to-[#7DFFB2]
                 text-white px-6 py-3 rounded-lg shadow-md hover:shadow-xl 
-                hover:scale-[1.03] transition font-semibold flex items-center gap-2"
+                hover:scale-[1.03] transition font-bold flex items-center gap-2"
             >
               <FiUploadCloud className="text-xl" />
               Publish

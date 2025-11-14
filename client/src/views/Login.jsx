@@ -119,7 +119,7 @@ function Login() {
 
           <button
             onClick={loginUser}
-            className="cursor-pointer w-full py-3 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white rounded-xl text-lg font-semibold shadow-md hover:shadow-xl hover:scale-[1.02] transition-all"
+            className="cursor-pointer w-full py-3 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white rounded-xl text-lg font-bold shadow-md hover:shadow-xl hover:scale-[1.02] transition-all"
           >
             Login
           </button>

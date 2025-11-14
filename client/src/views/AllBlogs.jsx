@@ -4,6 +4,7 @@ import BlogCard from "../components/BlogCard";
 import { getCurrentUser } from "./../util.js";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import toast, { Toaster } from "react-hot-toast";
 
 function AllBlogs() {
   const [user, setUser] = useState(null);
@@ -27,17 +28,22 @@ function AllBlogs() {
   useEffect(() => {
     fetchBlogs();
   }, [user]);
+  useEffect(() => {
+  if (user) {
+    toast.success(`Hello ${user.name}! 👋`, {
+      duration: 5000,
+      position: "top-center",
+    });
+  }
+}, [user]);
+
 
   return (
     <>
       <div className="container bg-[#F0FAFF] mx-auto p-4 pb-6">
         <Navbar />
 
-        {user && (
-          <h2 className="ml-10 mt-8 text-lg text-gray-700 font-medium mb-6">
-            Hello <span className="font-semibold text-orange-500">{user.name}</span> !
-          </h2>
-        )}
+       <Toaster />
 
         {blogs.length === 0 ? (
           <p className="text-gray-500 text-center mt-10">

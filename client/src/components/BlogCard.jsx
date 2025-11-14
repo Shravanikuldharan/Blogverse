@@ -123,12 +123,12 @@ function BlogCard({
     <div className="w-full flex justify-center">
       <Toaster />
 
-      <div className="relative bg-white rounded-3xl shadow-lg hover:scale-[1.01] transition-transform duration-300
+      <div className="mt-18 relative bg-white rounded-3xl shadow-lg hover:scale-[1.01] transition-transform duration-300
       border border-[#E8EEF4] overflow-hidden w-[95%] max-w-5xl my-8 flex flex-col md:flex-row">
 
         {/* category */}
         <span
-          className="absolute top-6 right-[-6px] flex items-center gap-1 px-3 py-1 text-xs font-medium shadow-md"
+          className="absolute top-6 right-[-6px] flex items-center gap-1 px-3 py-1 text-xs font-semibold shadow-md"
           style={{
             backgroundColor: categoryData.bg,
             color: categoryData.text,
@@ -174,7 +174,7 @@ function BlogCard({
           {/* author */}
           <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white flex items-center justify-center 
-              rounded-full text-lg font-semibold shadow-sm">
+              rounded-full text-lg font-bold shadow-sm">
               {author.name.substring(0, 1).toUpperCase()}
             </div>
             <div>
@@ -190,7 +190,7 @@ function BlogCard({
           {/* date | stats | button */}
           <div className="flex items-center justify-between w-full mt-4 pt-4 border-t border-gray-200">
 
-            <span className="text-gray-600 text-sm flex-1">
+            <span className="text-gray-600 font-semibold text-sm flex-1">
               {new Date(publishedAt || updatedAt).toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
@@ -225,7 +225,7 @@ function BlogCard({
                   to={`/blog/${slug}`}
                   className="bg-gradient-to-r from-[#0077b6] to-[#00b4d8]
                     text-white px-5 py-2 rounded-lg shadow-md hover:scale-[1.04] 
-                    hover:shadow-lg transition font-medium cursor-pointer"
+                    hover:shadow-lg transition font-semibold cursor-pointer"
                 >
                   Read More
                 </Link>
@@ -233,7 +233,7 @@ function BlogCard({
                 <Link
                   to={`/edit/${slug}`}
                   className="bg-gray-600 text-white px-5 py-2 rounded-lg 
-                    shadow-md hover:bg-gray-700 transition font-medium 
+                    shadow-md hover:bg-gray-700 transition font-semibold 
                     cursor-pointer"
                 >
                   Edit Blog

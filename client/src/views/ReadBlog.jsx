@@ -111,7 +111,7 @@ function ReadBlog() {
 
             {categoryData && (
               <span
-                className="absolute top-6 right-[-6px] px-4 py-1 flex items-center gap-2 shadow-md font-medium"
+                className="absolute top-6 right-[-6px] px-4 py-1 flex items-center gap-2 shadow-md font-semibold"
                 style={{
                   backgroundColor: categoryData.bg,
                   color: categoryData.text,
@@ -135,15 +135,15 @@ function ReadBlog() {
             <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
 
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white rounded-full flex items-center justify-center text-xl font-semibold">
+                <div className="w-10 h-10 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white rounded-full flex items-center justify-center text-xl font-semibold">
                   {blog?.author?.name?.substring(0, 1)}
                 </div>
-                <p className="font-semibold text-gray-800">
+                <p className="font-bold text-[20px] text-gray-800">
                   {blog?.author?.name}
                 </p>
               </div>
 
-              <div className="flex items-center gap-6 text-gray-700">
+              <div className="flex font-semibold text-lg items-center gap-6 text-gray-700">
                 <span className="flex items-center gap-2">
                   <FaEye className="text-[#0077b6]" />
                   <span>{blog.viewCount || 0}</span>
@@ -161,13 +161,12 @@ function ReadBlog() {
 
         {/* blog content  */}
         <div className="max-w-5xl mx-auto mt-8 bg-white shadow-lg border border-[#E8EEF4] rounded-3xl p-8">
-          <MarkdownEditor.Markdown source={blog.content} className="prose max-w-none" />
+          <MarkdownEditor.Markdown source={blog.content} className="prose max-w-none font-semibold" />
         </div>
-
 
         {/* Comments */}
         <div className="max-w-5xl mx-auto mt-16">
-          <h2 className="inline-flex items-center gap-2 text-2xl text-[#0077b6] font-semibold mb-4">
+          <h2 className="inline-flex items-center gap-2 text-2xl text-[#0077b6] font-bold mb-4">
             <FaRegComment className="text-[#0077b6]" />
             Comments
           </h2>
@@ -186,7 +185,7 @@ function ReadBlog() {
               onClick={addComment}
               className="mt-3 bg-gradient-to-r from-[#0077b6] to-[#00b4d8]
                 text-white px-5 py-2 rounded-lg shadow-md hover:scale-[1.03] 
-                hover:shadow-lg transition font-medium cursor-pointer self-end"
+                hover:shadow-lg transition font-semibold cursor-pointer self-end"
             >
               Post Comment
             </button>
@@ -203,7 +202,7 @@ function ReadBlog() {
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white 
-                       rounded-full flex items-center justify-center font-semibold">
+                       rounded-full flex items-center justify-center font-bold">
                         {c.user.name.substring(0, 1).toUpperCase()}
                       </div>
 
@@ -212,7 +211,7 @@ function ReadBlog() {
                       </div>
                     </div>
 
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-gray-500 text-sm font-medium">
                       {new Date(c.createdAt).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
@@ -221,7 +220,7 @@ function ReadBlog() {
                     </p>
                   </div>
 
-                  <p className="text-gray-700 ml-1">{c.content}</p>
+                  <p className="text-gray-700 font-medium ml-1">{c.content}</p>
                 </div>
               ))
             ) : (
