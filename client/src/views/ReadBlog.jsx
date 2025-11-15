@@ -73,31 +73,31 @@ function ReadBlog() {
   }, []);
 
   const handleThumbLike = async () => {
-  if (!isLoggedIn) {
-    toast.error("Please log in to like 👍");
-    return;
-  }
-
-  try {
-    const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}/blogs/${slug}/thumb-like`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-
-    if (response.data.success) {
-      setThumbLiked(true);
-      setThumbCount(response.data.totalThumbLikes);
-      toast.success("You liked this post 👍");
+    if (!isLoggedIn) {
+      toast.error("Please log in to like 👍");
+      return;
     }
-  } catch {
-    toast.error("Error liking post");
-  }
-};
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/blogs/${slug}/thumb-like`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        setThumbLiked(true);
+        setThumbCount(response.data.totalThumbLikes);
+        toast.success("You liked this post 👍");
+      }
+    } catch {
+      toast.error("Error liking post");
+    }
+  };
 
   const addComment = async () => {
     if (!newComment.trim()) {
@@ -171,7 +171,7 @@ function ReadBlog() {
                 </p>
               </div>
 
-                  {/* view + like */}
+              {/* view + like */}
               <div className="flex items-center gap-6 text-lg font-semibold text-gray-700">
 
                 <span className="flex items-center gap-2">
@@ -203,7 +203,7 @@ function ReadBlog() {
           />
         </div>
 
-       {/* Comments */}
+        {/* Comments */}
         <div className="max-w-5xl mx-auto mt-16">
           <h2 className="inline-flex items-center gap-2 text-2xl text-[#0077b6] font-bold mb-4">
             <FaRegComment className="text-[#0077b6]" />

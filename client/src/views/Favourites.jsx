@@ -58,37 +58,37 @@ function Favorites() {
 
   return (
     <>
-    <div className="container mx-auto p-4">
-      <Navbar />
+      <div className="container mx-auto p-4">
+        <Navbar />
 
-      {blogs.length === 0 ? (
-        <div className="text-center">
-          <img src={emptyFav} className="w-100 m-auto mb-[-50px]" />
+        {blogs.length === 0 ? (
+          <div className="text-center">
+            <img src={emptyFav} className="w-100 m-auto mb-[-50px]" />
 
-          <p className="text-gray-500 text-lg">
-            You haven’t liked any blogs yet. <br />
-            Click the ❤️ icon on a blog to add it here.
-          </p>
-        </div>
-      ) : (
-        blogs.map((blog) => (
-          <BlogCard
-            key={blog._id}
-            _id={blog._id}
-            title={blog.title}
-            author={blog.author}
-            publishedAt={blog.publishedAt}
-            updatedAt={blog.updatedAt}
-            status={blog.status}
-            category={blog.category}
-            slug={blog.slug}
-            viewCount={blog.viewCount}
-            initialLikes={blog.likes}
-          />
-        ))
-      )}
-    </div>
-    <Footer />
+            <p className="text-gray-500 text-lg">
+              You haven’t liked any blogs yet. <br />
+              Click the ❤️ icon on a blog to add it here.
+            </p>
+          </div>
+        ) : (
+          blogs.map((blog) => (
+            <BlogCard
+              key={blog._id}
+              _id={blog._id}
+              title={blog.title}
+              author={blog.author}
+              publishedAt={blog.publishedAt}
+              updatedAt={blog.updatedAt}
+              status={blog.status}
+              category={blog.category}
+              slug={blog.slug}
+              viewCount={blog.viewCount}
+              initialLikes={blog.likes}
+            />
+          ))
+        )}
+      </div>
+      <Footer />
     </>
   );
 }

@@ -1,11 +1,11 @@
-export const setCache = (key, data, cacheDuration  = 5 * 60 * 1000) => {
+export const setCache = (key, data, cacheDuration = 5 * 60 * 1000) => {
   try {
     const item = {
       data,
-      expiry: Date.now() + cacheDuration ,
+      expiry: Date.now() + cacheDuration,
     };
     localStorage.setItem(key, JSON.stringify(item));
-  } catch {}
+  } catch { }
 };
 
 // fetching from cache
@@ -26,14 +26,14 @@ export const getCache = (key) => {
   }
 };
 
-export const fetchWithCache = async (url, cacheKey, cacheDuration  = 5 * 60 * 1000) => {
+export const fetchWithCache = async (url, cacheKey, cacheDuration = 5 * 60 * 1000) => {
   const cached = getCache(cacheKey);
   if (cached) return cached;
 
   const res = await fetch(url);
   const data = await res.json();
 
-  setCache(cacheKey, data, cacheDuration );
+  setCache(cacheKey, data, cacheDuration);
 
   return data;
 };
