@@ -12,7 +12,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [termsError, setTermsError] = useState(false);
-
+  const [loginError, setLoginError] = useState(false);
 
   const loginUser = async () => {
     if (!acceptedTerms) {
@@ -32,6 +32,8 @@ function Login() {
       }
     } catch (err) {
       console.error("Login failed:", err);
+
+      setLoginError(true);
     }
   };
 
@@ -63,9 +65,14 @@ function Login() {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/70 border border-gray-300 shadow-sm focus:ring-2 focus:ring-[#00b4d8] outline-none transition-all"
+                className={`w-full pl-10 pr-4 py-3 rounded-xl bg-white/70 border 
+                ${loginError ? "border-red-500" : "border-gray-300"}
+                shadow-sm focus:ring-2 focus:ring-[#00b4d8] outline-none transition-all`}
                 value={user.email}
-                onChange={(e) => setUser({ ...user, email: e.target.value })}
+                onChange={(e) => {
+                  setUser({ ...user, email: e.target.value });
+                  setLoginError(false);
+                }}
               />
             </div>
           </div>
@@ -77,9 +84,14 @@ function Login() {
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
-                className="w-full pl-10 pr-12 py-3 rounded-xl bg-white/70 border border-gray-300 shadow-sm focus:ring-2 focus:ring-[#00b4d8] outline-none transition-all"
+                className={`w-full pl-10 pr-12 py-3 rounded-xl bg-white/70 border 
+                ${loginError ? "border-red-500" : "border-gray-300"}
+                shadow-sm focus:ring-2 focus:ring-[#00b4d8] outline-none transition-all`}
                 value={user.password}
-                onChange={(e) => setUser({ ...user, password: e.target.value })}
+                onChange={(e) => {
+                  setUser({ ...user, password: e.target.value });
+                  setLoginError(false);
+                }}
               />
 
               <button
@@ -90,6 +102,13 @@ function Login() {
                 {showPassword ? <FiEye /> : <FiEyeOff />}
               </button>
             </div>
+
+            {loginError && (
+              <p className="text-red-500 text-sm mt-1">
+                * Invalid email or password.
+              </p>
+            )}
+
           </div>
 
           <div className="flex items-center gap-3 mt-1">

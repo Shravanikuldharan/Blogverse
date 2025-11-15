@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router";
 import signupImg from "../assets/signup.png";
 
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
+import toast, { Toaster } from "react-hot-toast";
 
 function Signup() {
   const navigate = useNavigate();
@@ -24,16 +25,18 @@ function Signup() {
       );
 
       if (response.data.success) {
-        console.log("Signup success:", response.data);
-        navigate("/login");
+        toast.success("User registered successfully!");
+        setTimeout(() => navigate("/login"), 1500);
       }
     } catch (err) {
+      toast.error("Signup failed! Please try again.");
       console.error("Signup failed:", err);
     }
   };
 
   return (
     <div className="flex min-h-screen w-full bg-[#fff] overflow-hidden">
+      <Toaster/>
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center px-6 md:px-16 relative overflow-hidden bg-white">
         <h1 className="text-4xl font-extrabold text-gray-800 mb-4 tracking-wide">
           <span className="bg-gradient-to-r from-[#0077b6] to-[#00b4d8] bg-clip-text text-transparent">
