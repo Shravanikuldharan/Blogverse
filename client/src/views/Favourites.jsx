@@ -4,6 +4,8 @@ import Navbar from "../components/Navbar";
 import BlogCard from "../components/BlogCard";
 import toast from "react-hot-toast";
 import emptyFav from "../assets/fav.png";
+import { fetchWithCache } from "../utils/apiCache.js";
+import Footer from "../components/Footer.jsx";
 
 function Favorites() {
   const [blogs, setBlogs] = useState([]);
@@ -20,11 +22,17 @@ function Favorites() {
 
       const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/blogs`);
-      const allBlogs = response.data.data || [];
+      const response = await fetchWithCache(
+        `${import.meta.env.VITE_API_URL}/blogs`,
+        "cache_allblogs"
+      );
+      const allBlogs = response.data || [];
 
+      // filter only liked blog
       const likedBlogs = allBlogs.filter((b) =>
-        favorites.some((f) => f.toLowerCase() === b.slug.toLowerCase())
+        favorites.some(
+          (f) => f.toLowerCase() === b.slug.toLowerCase()
+        )
       );
 
       setBlogs(likedBlogs);
@@ -49,15 +57,13 @@ function Favorites() {
   }
 
   return (
+    <>
     <div className="container mx-auto p-4">
       <Navbar />
 
       {blogs.length === 0 ? (
         <div className="text-center">
-          <img
-            src={emptyFav}
-            className="w-100 m-auto mb-[-50px]"
-          />
+          <img src={emptyFav} className="w-100 m-auto mb-[-50px]" />
 
           <p className="text-gray-500 text-lg">
             You haven’t liked any blogs yet. <br />
@@ -82,6 +88,8 @@ function Favorites() {
         ))
       )}
     </div>
+    <Footer />
+    </>
   );
 }
 

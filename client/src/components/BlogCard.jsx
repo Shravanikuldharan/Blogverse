@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa";
 import "../index.css";
 import { BLOG_CATEGORIES } from "../constants.js";
+import { fetchWithCache } from "../utils/apiCache"; 
 
 function BlogCard({
   _id,
@@ -38,7 +39,9 @@ function BlogCard({
   const categoryImage = categoryData?.image;
 
   useEffect(() => {
-    axios.post(`${import.meta.env.VITE_API_URL}/blogs/${slug}/view`).catch(() => { });
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/blogs/${slug}?view=true`)
+      .catch(() => { });
   }, [slug]);
 
   useEffect(() => {
@@ -46,21 +49,30 @@ function BlogCard({
     setLiked(storedLikes.includes(slug));
   }, [slug]);
 
+  // load blog & comments 
   useEffect(() => {
     const fetchBlogData = async () => {
       try {
         const [blogRes, commentsRes] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_API_URL}/blogs/${slug}`),
-          axios.get(`${import.meta.env.VITE_API_URL}/blogs/${slug}/comments`),
+          fetchWithCache(
+            `${import.meta.env.VITE_API_URL}/blogs/${slug}`,
+            `cache_blog_${slug}`
+          ),
+          fetchWithCache(
+            `${import.meta.env.VITE_API_URL}/blogs/${slug}/comments`,
+            `cache_comments_${slug}`
+          ),
         ]);
 
-        if (blogRes.data.success) {
-          const blog = blogRes.data.data;
-          setThumbCount(blog.thumbLikes || blog.totalThumbLikes || blog.likes || 0);
+        if (blogRes?.success) {
+          const blog = blogRes.data;
+          setThumbCount(
+            blog.thumbLikes || blog.totalThumbLikes || blog.likes || 0
+          );
         }
 
-        if (commentsRes.data?.comments) {
-          setCommentCount(commentsRes.data.comments.length);
+        if (commentsRes?.comments) {
+          setCommentCount(commentsRes.comments.length);
         }
       } catch (err) { }
     };
@@ -92,7 +104,9 @@ function BlogCard({
         localStorage.setItem("favorites", JSON.stringify(updated));
 
         toast.success(
-          response.data.liked ? "Added to favorites ❤️" : "Removed from favorites 💔"
+          response.data.liked
+            ? "Added to favorites ❤️"
+            : "Removed from favorites 💔"
         );
       }
     } catch (error) { }
@@ -123,17 +137,17 @@ function BlogCard({
     <div className="w-full flex justify-center">
       <Toaster />
 
-      <div className="mt-12 relative bg-white rounded-3xl shadow-lg hover:scale-[1.01] transition-transform duration-300
-      border border-[#E8EEF4] overflow-hidden w-[95%] max-w-5xl my-2 flex flex-col md:flex-row">
-
+      <div
+        className="mt-12 relative bg-white rounded-3xl shadow-lg hover:scale-[1.01] transition-transform duration-300
+      border border-[#E8EEF4] overflow-hidden w-[95%] max-w-5xl my-2 flex flex-col md:flex-row"
+      >
         {/* category */}
         <span
           className="absolute top-6 right-[-6px] flex items-center gap-1 px-3 py-1 text-xs font-semibold shadow-md"
           style={{
             backgroundColor: categoryData.bg,
             color: categoryData.text,
-            // border: `0.1px solid ${categoryData.text}`,
-            borderRadius: "20px 0px 0px 20px"
+            borderRadius: "20px 0px 0px 20px",
           }}
         >
           {CategoryIcon && (
@@ -145,7 +159,6 @@ function BlogCard({
           {category}
         </span>
 
-
         {/* img */}
         <div className="relative md:w-2/5 w-full h-60 md:h-auto group">
           <img
@@ -153,7 +166,7 @@ function BlogCard({
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 group-hover:brightness-90"
           />
 
-          {/* ststus */}
+          {/* status */}
           {status !== "published" && (
             <span className="absolute top-3 right-3 bg-yellow-200 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full shadow">
               {status.toUpperCase()}
@@ -164,17 +177,22 @@ function BlogCard({
             onClick={toggleHeart}
             className="cursor-pointer absolute top-3 left-3 bg-white shadow-md p-2 rounded-full hover:scale-110 transition"
           >
-            {liked ? <FaHeart className="text-red-500 text-xl" /> : <FaRegHeart className="text-gray-600 text-xl" />}
+            {liked ? (
+              <FaHeart className="text-red-500 text-xl" />
+            ) : (
+              <FaRegHeart className="text-gray-600 text-xl" />
+            )}
           </button>
         </div>
 
         {/* right side */}
         <div className="p-6 flex flex-col justify-between flex-1">
-
           {/* author */}
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white flex items-center justify-center 
-              rounded-full text-lg font-bold shadow-sm">
+            <div
+              className="w-10 h-10 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white flex items-center justify-center 
+              rounded-full text-lg font-bold shadow-sm"
+            >
               {author.name.substring(0, 1).toUpperCase()}
             </div>
             <div>
@@ -185,11 +203,11 @@ function BlogCard({
 
           {/* title */}
           <h2 className="text-2xl font-bold text-gray-900 hover:text-[#0077b6] transition duration-400 mb-3">
-            {title}</h2>
+            {title}
+          </h2>
 
           {/* date | stats | button */}
           <div className="flex items-center justify-between w-full mt-4 pt-4 border-t border-gray-200">
-
             <span className="text-gray-600 font-semibold text-sm flex-1">
               {new Date(publishedAt || updatedAt).toLocaleDateString("en-US", {
                 month: "short",
@@ -199,22 +217,21 @@ function BlogCard({
             </span>
 
             <div className="flex items-center justify-center gap-6 text-md flex-1">
-
               <button
                 onClick={handleThumbLike}
                 className="flex cursor-pointer items-center gap-1 transition"
               >
-                <FaRegThumbsUp className="text-[#0077b6]" />  
-                <span className="text-gray-700">{thumbCount}</span> 
+                <FaRegThumbsUp className="text-[#0077b6]" />
+                <span className="text-gray-700">{thumbCount}</span>
               </button>
 
               <span className="flex items-center gap-1">
-                <FaRegComment className="text-[#0077b6]" /> 
-                <span className="text-gray-700">{commentCount}</span> 
+                <FaRegComment className="text-[#0077b6]" />
+                <span className="text-gray-700">{commentCount}</span>
               </span>
 
               <span className="flex items-center gap-1">
-                <FaEye className="text-[#0077b6]" /> 
+                <FaEye className="text-[#0077b6]" />
                 <span className="text-gray-700">{viewCount || 0}</span>
               </span>
             </div>

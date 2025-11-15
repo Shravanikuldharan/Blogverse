@@ -7,6 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { FaThumbsUp, FaRegThumbsUp, FaEye, FaComment, FaRegComment } from "react-icons/fa";
 import { BLOG_CATEGORIES } from "../constants";
 import Footer from "../components/Footer";
+import { fetchWithCache } from "../utils/apiCache";
 
 function ReadBlog() {
   const { slug } = useParams();
@@ -22,29 +23,48 @@ function ReadBlog() {
     (cat) => cat.name.toLowerCase() === blog?.category?.toLowerCase()
   );
 
-  const fetchBlog = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/blogs/${slug}?view=true`
-      );
-      const data = response.data.data;
-      setBlog(data);
+  // const fetchBlog = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${import.meta.env.VITE_API_URL}/blogs/${slug}?view=true`
+  //     );
+  //     const data = response.data.data;
+  //     setBlog(data);
 
-      setThumbCount(data.thumbLikes || data.totalThumbLikes || data.likes || 0);
-    } catch (error) {
-      console.log(error);
-    }
+  //     setThumbCount(data.thumbLikes || data.totalThumbLikes || data.likes || 0);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  const fetchBlog = async () => {
+    const res = await fetchWithCache(
+      `${import.meta.env.VITE_API_URL}/blogs/${slug}?view=true`,
+      `cache_blog_${slug}`
+    );
+    const data = res.data;
+    setBlog(data);
+    setThumbCount(data.thumbLikes || data.totalThumbLikes || data.likes || 0);
   };
 
+  // const loadComments = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${import.meta.env.VITE_API_URL}/blogs/${slug}/comments`
+  //     );
+  //     setComments(response.data.comments || []);
+  //   } catch (error) {
+  //     toast.error("Failed to load comments");
+  //   }
+  // };
+
   const loadComments = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/blogs/${slug}/comments`
-      );
-      setComments(response.data.comments || []);
-    } catch (error) {
-      toast.error("Failed to load comments");
-    }
+    const res = await fetchWithCache(
+      `${import.meta.env.VITE_API_URL}/blogs/${slug}/comments`,
+      `cache_comments_${slug}`,
+       15 * 1000
+    );
+    setComments(res.comments || []);
   };
 
   useEffect(() => {
@@ -150,7 +170,7 @@ function ReadBlog() {
                 </span>
 
                 <button onClick={handleThumbLike}
-                  className="flex items-center gap-2 hover:text-[#0077b6] transition">
+                  className="cursor-pointer flex items-center gap-2 hover:text-[#0077b6] transition">
                   {thumbLiked ? <FaThumbsUp className="text-[#0077b6]" /> : <FaRegThumbsUp className="text-[#0077b6]" />}
                   <span>{thumbCount}</span>
                 </button>

@@ -5,17 +5,30 @@ import { getCurrentUser } from "./../util.js";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import toast, { Toaster } from "react-hot-toast";
+import { fetchWithCache } from "../utils/apiCache.js";
 
 function AllBlogs() {
   const [user, setUser] = useState(null);
   const [blogs, setBlogs] = useState([]);
 
+  // const fetchBlogs = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${import.meta.env.VITE_API_URL}/blogs?author=${user?._id || ""}`
+  //     );
+  //     setBlogs(response.data.data);
+  //   } catch (error) {
+  //     console.error("Error fetching blogs:", error);
+  //   }
+  // };
+
   const fetchBlogs = async () => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/blogs?author=${user?._id || ""}`
+      const res = await fetchWithCache(
+        `${import.meta.env.VITE_API_URL}/blogs?author=${user?._id || ""}`,
+        `cache_allblogs_${user?._id || "guest"}`
       );
-      setBlogs(response.data.data);
+      setBlogs(res.data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
     }
@@ -28,14 +41,15 @@ function AllBlogs() {
   useEffect(() => {
     fetchBlogs();
   }, [user]);
+
   useEffect(() => {
-  if (user) {
-    toast.success(`Hello ${user.name}! 👋`, {
-      duration: 5000,
-      position: "top-center",
-    });
-  }
-}, [user]);
+    if (user) {
+      toast.success(`Hello ${user.name}! 👋`, {
+        duration: 5000,
+        position: "top-center",
+      });
+    }
+  }, [user]);
 
 
   return (
@@ -43,7 +57,7 @@ function AllBlogs() {
       <div className="bg-[#F0FAFF] mx-auto p-4 pb-6">
         <Navbar />
 
-       <Toaster />
+        <Toaster />
 
         {blogs.length === 0 ? (
           <p className="text-gray-500 text-center mt-10">
