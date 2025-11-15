@@ -87,7 +87,7 @@ function Login() {
                 onClick={() => setShowPassword(!showPassword)}
                 className="cursor-pointer absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#00b4d8] transition text-xl"
               >
-                {showPassword ? <FiEyeOff /> : <FiEye />}
+                {showPassword ? <FiEye /> : <FiEyeOff />}
               </button>
             </div>
           </div>

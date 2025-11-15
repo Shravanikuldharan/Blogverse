@@ -203,18 +203,18 @@ function ReadBlog() {
           />
         </div>
 
-        {/* comments */}
-        <div className="max-w-5xl mx-auto mt-12">
-
-          <h2 className="text-2xl font-bold text-[#0077b6] flex items-center gap-2">
-            <FaRegComment /> Comments
+       {/* Comments */}
+        <div className="max-w-5xl mx-auto mt-16">
+          <h2 className="inline-flex items-center gap-2 text-2xl text-[#0077b6] font-bold mb-4">
+            <FaRegComment className="text-[#0077b6]" />
+            Comments
           </h2>
 
-          {/* add c */}
-          <div className="bg-white border p-5 rounded-2xl mt-4 shadow">
+          {/* add comment box */}
+          <div className="bg-white border border-gray-200 p-5 rounded-2xl shadow-sm mb-12 flex flex-col justify-between h-full">
             <textarea
               rows="3"
-              className="w-full border rounded-xl p-3 focus:ring-[#0077b6] focus:ring-2"
+              className="w-full border border-gray-300 rounded-xl p-3 focus:ring-[#0077b6] focus:ring-2 outline-none"
               placeholder="Write your comment..."
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
@@ -222,28 +222,34 @@ function ReadBlog() {
 
             <button
               onClick={addComment}
-              className="mt-3 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white px-5 py-2 rounded-lg shadow hover:scale-[1.03]"
+              className="mt-3 bg-gradient-to-r from-[#0077b6] to-[#00b4d8]
+                text-white px-5 py-2 rounded-lg shadow-md hover:scale-[1.03] 
+                hover:shadow-lg transition font-medium cursor-pointer self-end"
             >
               Post Comment
             </button>
           </div>
 
-          <div className="mt-6 space-y-4">
+          {/* show comments */}
+          <div className="space-y-6">
             {comments.length ? (
               comments.map((c) => (
                 <div
                   key={c._id}
-                  className="bg-white border p-4 rounded-2xl shadow hover:shadow-md"
+                  className="bg-white border border-[#E8EEF4] p-4 rounded-2xl shadow-sm hover:shadow-lg transition"
                 >
-                  <div className="flex justify-between mb-2">
+                  <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white rounded-full flex items-center justify-center font-bold">
-                        {c.user.name.substring(0, 1)}
+                      <div className="w-10 h-10 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white 
+                       rounded-full flex items-center justify-center font-semibold">
+                        {c.user.name.substring(0, 1).toUpperCase()}
                       </div>
-                      <p className="font-semibold">{c.user.name}</p>
-                    </div>
 
-                    <p className="text-sm text-gray-500">
+                      <div>
+                        <p className="font-semibold text-gray-800">{c.user.name}</p>
+                      </div>
+                    </div>
+                    <p className="text-sm font-semibold text-gray-500">
                       {new Date(c.createdAt).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
@@ -251,11 +257,11 @@ function ReadBlog() {
                       })}
                     </p>
                   </div>
-                  <p className="text-gray-700">{c.content}</p>
+                  <p className="font-medium text-gray-700">{c.content}</p>
                 </div>
               ))
             ) : (
-              <p className="text-gray-500">No comments yet.</p>
+              <p className="text-gray-500">No comments yet — add yours!</p>
             )}
           </div>
         </div>
