@@ -138,7 +138,7 @@ function BlogCard({
     <Toaster />
 
     <div
-      className="mt-12 relative bg-white rounded-3xl shadow-lg hover:scale-[1.01] transition-transform duration-300
+      className="mt-12 relative bg-white rounded-3xl shadow-lg 
       border border-[#E8EEF4] overflow-hidden w-[95%] max-w-5xl my-2 flex flex-col md:flex-row"
     >
       <span
