@@ -63,7 +63,7 @@ function ReadBlog() {
     const res = await fetchWithCache(
       `${import.meta.env.VITE_API_URL}/blogs/${slug}/comments`,
       `cache_comments_${slug}`,
-       15 * 1000
+       1 * 1000
     );
     setComments(res.comments || []);
   };

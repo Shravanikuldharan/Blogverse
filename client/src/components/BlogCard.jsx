@@ -142,7 +142,7 @@ function BlogCard({
       border border-[#E8EEF4] overflow-hidden w-[95%] max-w-5xl my-2 flex flex-col md:flex-row"
     >
       <span
-        className="absolute top-6 right-[-6px] flex items-center gap-1 px-3 py-1 text-xs font-semibold shadow-md"
+        className="absolute top-6 right-[-6px] flex items-center gap-1 px-3 py-1 text-[14px] font-semibold shadow-md"
         style={{
           backgroundColor: categoryData.bg,
           color: categoryData.text,
@@ -151,7 +151,7 @@ function BlogCard({
       >
         {CategoryIcon && (
           <CategoryIcon
-            className="text-sm"
+            className="text-[14px]"
             style={{ color: categoryData.iconColor }}
           />
         )}
@@ -195,8 +195,8 @@ function BlogCard({
             {author.name.substring(0, 1).toUpperCase()}
           </div>
           <div>
-            <p className="text-xs sm:text-sm font-semibold text-gray-800">{author.name}</p>
-            <p className="text-xs sm:text-sm font-normal text-gray-600">{author.email}</p>
+            <p className="text-xs sm:text-lg font-semibold text-gray-800">{author.name}</p>
+            <p className="text-xs sm:text-[16px] font-normal text-gray-600">{author.email}</p>
           </div>
         </div>
 
@@ -206,7 +206,7 @@ function BlogCard({
         </h2>
 
         <div className="flex items-center justify-between w-full mt-4 pt-4 border-t border-gray-200">
-          <span className="text-xs sm:text-sm text-gray-600 font-semibold flex-1">
+          <span className="text-xs sm:text-[16px] text-gray-600 font-semibold flex-1">
             {new Date(publishedAt || updatedAt).toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
@@ -214,7 +214,7 @@ function BlogCard({
             })}
           </span>
 
-          <div className="flex items-center justify-center gap-4 text-xs sm:text-md flex-1">
+          <div className="flex items-center justify-center gap-4 text-xs sm:text-[16px] flex-1">
             <button
               onClick={handleThumbLike}
               className="flex cursor-pointer items-center gap-1 transition"
@@ -240,7 +240,7 @@ function BlogCard({
               <Link
                 to={`/blog/${slug}`}
                 className="bg-gradient-to-r from-[#0077b6] to-[#00b4d8]
-                  text-white px-4 py-1 sm:px-5 sm:py-2 rounded-lg shadow-md hover:scale-[1.04] 
+                  text-white text-xs px-2 py-2 sm:px-4 sm:py-3 sm:text-[16px] rounded-lg shadow-md hover:scale-[1.04] 
                   hover:shadow-lg transition font-semibold cursor-pointer"
               >
                 Read More
