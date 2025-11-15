@@ -5,7 +5,6 @@ import { getCurrentUser } from "./../util.js";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import toast, { Toaster } from "react-hot-toast";
-// import { fetchWithCache } from "../utils/apiCache.js";
 
 function AllBlogs() {
   const [user, setUser] = useState(null);
@@ -21,18 +20,6 @@ function AllBlogs() {
       console.error("Error fetching blogs:", error);
     }
   };
-
-  // const fetchBlogs = async () => {
-  //   try {
-  //     const res = await fetchWithCache(
-  //       `${import.meta.env.VITE_API_URL}/blogs?author=${user?._id || ""}`,
-  //       `cache_allblogs_${user?._id || "guest"}`
-  //     );
-  //     setBlogs(res.data);
-  //   } catch (error) {
-  //     console.error("Error fetching blogs:", error);
-  //   }
-  // };
 
   useEffect(() => {
     setUser(getCurrentUser());
@@ -51,7 +38,6 @@ function AllBlogs() {
     }
   }, [user]);
 
-
   return (
     <>
       <div className="bg-[#F0FAFF] mx-auto p-4 pb-6">
@@ -65,30 +51,19 @@ function AllBlogs() {
           </p>
         ) : (
           blogs.map((blog) => {
-            const {
-              _id,
-              title,
-              author,
-              updatedAt,
-              publishedAt,
-              status,
-              category,
-              slug,
-              viewCount,
-            } = blog;
-
             return (
               <BlogCard
-                key={_id}
-                title={title}
-                author={author}
-                updatedAt={updatedAt}
-                publishedAt={publishedAt}
-                status={status}
-                category={category}
-                slug={slug}
-                viewCount={viewCount}
-                initialLikes={blog.likes}
+                key={blog._id}
+                _id={blog._id}
+                title={blog.title}
+                author={blog.author}
+                updatedAt={blog.updatedAt}
+                publishedAt={blog.publishedAt}
+                status={blog.status}
+                category={blog.category}
+                slug={blog.slug}
+                viewCount={blog.viewCount}
+                initialThumbLikes={blog.thumbLikes}
               />
             );
           })

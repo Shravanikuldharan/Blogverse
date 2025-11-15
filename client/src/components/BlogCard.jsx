@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 import "../index.css";
 import { BLOG_CATEGORIES } from "../constants.js";
-import { fetchWithCache } from "../utils/apiCache"; 
+import { fetchWithCache } from "../utils/apiCache";
 
 function BlogCard({
   _id,
@@ -29,7 +29,8 @@ function BlogCard({
   const [thumbLiked, setThumbLiked] = useState(false);
   const [thumbCount, setThumbCount] = useState(initialThumbLikes);
   const [commentCount, setCommentCount] = useState(0);
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+
+  const isLoggedIn = !!localStorage.getItem("token");
 
   const categoryData = BLOG_CATEGORIES.find(
     (cat) => cat.name.toLowerCase() === category?.toLowerCase()
@@ -39,19 +40,12 @@ function BlogCard({
   const categoryImage = categoryData?.image;
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/blogs/${slug}?view=true`)
-      .catch(() => { });
+    const stored = JSON.parse(localStorage.getItem("favorites")) || [];
+    setLiked(stored.includes(slug));
   }, [slug]);
 
   useEffect(() => {
-    const storedLikes = JSON.parse(localStorage.getItem("favorites")) || [];
-    setLiked(storedLikes.includes(slug));
-  }, [slug]);
-
-  // load blog & comments 
-  useEffect(() => {
-    const fetchBlogData = async () => {
+    const loadData = async () => {
       try {
         const [blogRes, commentsRes] = await Promise.all([
           fetchWithCache(
@@ -66,9 +60,7 @@ function BlogCard({
 
         if (blogRes?.success) {
           const blog = blogRes.data;
-          setThumbCount(
-            blog.thumbLikes || blog.totalThumbLikes || blog.likes || 0
-          );
+          setThumbCount(blog.thumbLikes || blog.likes || 0);
         }
 
         if (commentsRes?.comments) {
@@ -77,20 +69,21 @@ function BlogCard({
       } catch (err) { }
     };
 
-    fetchBlogData();
+    loadData();
   }, [slug]);
 
   const toggleHeart = async () => {
-    if (!isLoggedIn) {
-      toast.error("You’ve been logged out. Please log in.");
-      return;
-    }
+    if (!isLoggedIn) return toast.error("You’ve been logged out. Please log in.");
 
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/blogs/${slug}/like`,
         {},
-        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
 
       if (response.data.success) {
@@ -102,165 +95,172 @@ function BlogCard({
           : stored.filter((s) => s !== slug);
 
         localStorage.setItem("favorites", JSON.stringify(updated));
-
-        toast.success(
-          response.data.liked
-            ? "Added to favorites ❤️"
-            : "Removed from favorites 💔"
-        );
       }
-    } catch (error) { }
+    } catch { }
   };
 
   const handleThumbLike = async () => {
-    if (!isLoggedIn) {
-      toast.error("You’ve been logged out. Please log in.");
-      return;
-    }
+    if (!isLoggedIn) return toast.error("You’ve been logged out. Please log in.");
 
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/blogs/${slug}/thumb-like`,
         {},
-        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
 
       if (response.data.success) {
         setThumbLiked(true);
         setThumbCount(response.data.totalThumbLikes);
-        toast.success("You liked this post 👍");
+        localStorage.removeItem(`cache_blog_${slug}`);
       }
-    } catch (error) { }
+    } catch { }
   };
 
- return (
-  <div className="w-full flex justify-center">
-    <Toaster />
+  return (
+    <div className="w-full flex justify-center">
+      <Toaster />
 
-    <div
-      className="mt-12 relative bg-white rounded-3xl shadow-lg 
-      border border-[#E8EEF4] overflow-hidden w-[95%] max-w-5xl my-2 flex flex-col md:flex-row"
-    >
-      <span
-        className="absolute top-6 right-[-6px] flex items-center gap-1 px-3 py-1 text-[14px] font-semibold shadow-md"
-        style={{
-          backgroundColor: categoryData.bg,
-          color: categoryData.text,
-          borderRadius: "20px 0px 0px 20px",
-        }}
+      <div className="mt-12 relative bg-white rounded-3xl shadow-lg 
+        border border-[#E8EEF4] overflow-hidden w-[95%] max-w-5xl my-2 
+        flex flex-col md:flex-row"
       >
-        {CategoryIcon && (
-          <CategoryIcon
-            className="text-[14px]"
-            style={{ color: categoryData.iconColor }}
-          />
-        )}
-        {category}
-      </span>
-
-      {/* img */}
-      <div className="relative md:w-2/5 w-full h-60 md:h-auto group">
-        <img
-          src={categoryImage}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 group-hover:brightness-90"
-        />
-
-        {/* status */}
-        {status !== "published" && (
-          <span className="absolute top-3 right-3 bg-yellow-200 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full shadow">
-            {status.toUpperCase()}
-          </span>
-        )}
-
-        <button
-          onClick={toggleHeart}
-          className="cursor-pointer absolute top-3 left-3 bg-white shadow-md p-2 rounded-full hover:scale-110 transition"
+        {/* Category */}
+        <span
+          className="absolute top-6 right-[-6px] flex items-center gap-1 px-3 py-1 
+          text-[14px] font-semibold shadow-md"
+          style={{
+            backgroundColor: categoryData.bg,
+            color: categoryData.text,
+            borderRadius: "20px 0px 0px 20px",
+          }}
         >
-          {liked ? (
-            <FaHeart className="text-red-500 text-xl" />
-          ) : (
-            <FaRegHeart className="text-gray-600 text-xl" />
+          {CategoryIcon && (
+            <CategoryIcon
+              className="text-[14px]"
+              style={{ color: categoryData.iconColor }}
+            />
           )}
-        </button>
-      </div>
+          {category}
+        </span>
 
-      {/* right side */}
-      <div className="p-4 sm:p-6 flex flex-col justify-between flex-1">
+        {/* left */}
+        <div className="relative md:w-2/5 w-full h-60 md:h-auto group">
+          <img
+            src={categoryImage}
+            className="w-full h-full object-cover 
+            transition-transform duration-500 group-hover:scale-105"
+          />
 
-        <div className="flex items-center gap-3 mb-3">
-          <div
-            className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white flex items-center justify-center 
-            rounded-full text-lg font-bold shadow-sm"
+          {/* favorite */}
+          <button
+            onClick={toggleHeart}
+            className="cursor-pointer absolute top-3 left-3 
+            bg-white shadow-md p-2 rounded-full hover:scale-110 transition"
           >
-            {author.name.substring(0, 1).toUpperCase()}
-          </div>
-          <div>
-            <p className="text-xs sm:text-lg font-semibold text-gray-800">{author.name}</p>
-            <p className="text-xs sm:text-[16px] font-normal text-gray-600">{author.email}</p>
-          </div>
+            {liked ? (
+              <FaHeart className="text-red-500 text-xl" />
+            ) : (
+              <FaRegHeart className="text-gray-600 text-xl" />
+            )}
+          </button>
+
+          {status !== "published" && (
+            <span className="absolute top-3 right-3 bg-yellow-200 text-yellow-900 
+              text-xs font-bold px-3 py-1 rounded-full shadow"
+            >
+              {status.toUpperCase()}
+            </span>
+          )}
         </div>
 
-        {/* title */}
-        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 hover:text-[#0077b6] transition duration-400 mb-3">
-          {title}
-        </h2>
+        {/* right info */}
+        <div className="p-4 sm:p-6 flex flex-col justify-between flex-1">
 
-        <div className="flex items-center justify-between w-full mt-4 pt-4 border-t border-gray-200">
-          <span className="text-xs sm:text-[16px] text-gray-600 font-semibold flex-1">
-            {new Date(publishedAt || updatedAt).toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
-          </span>
-
-          <div className="flex items-center justify-center gap-4 text-xs sm:text-[16px] flex-1">
-            <button
-              onClick={handleThumbLike}
-              className="flex cursor-pointer items-center gap-1 transition"
+          <div className="flex items-center gap-3 mb-3">
+            <div
+              className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0077b6] 
+              to-[#00b4d8] text-white flex items-center justify-center rounded-full 
+              text-lg font-bold shadow-sm"
             >
-              <FaRegThumbsUp className="text-[#0077b6]" />
-              <span className="text-gray-700">{thumbCount}</span>
-            </button>
+              {author.name.substring(0, 1).toUpperCase()}
+            </div>
 
-            <span className="flex items-center gap-1">
-              <FaRegComment className="text-[#0077b6]" />
-              <span className="text-gray-700">{commentCount}</span>
-            </span>
-
-            <span className="flex items-center gap-1">
-              <FaEye className="text-[#0077b6]" />
-              <span className="text-gray-700">{viewCount || 0}</span>
-            </span>
+            <div>
+              <p className="text-xs sm:text-lg font-semibold text-gray-800">
+                {author.name}
+              </p>
+              <p className="text-xs sm:text-[16px] text-gray-600">
+                {author.email}
+              </p>
+            </div>
           </div>
 
-          {/* btn */}
-          <div className="flex justify-end flex-1">
-            {status === "published" ? (
-              <Link
-                to={`/blog/${slug}`}
-                className="bg-gradient-to-r from-[#0077b6] to-[#00b4d8]
-                  text-white text-xs px-2 py-2 sm:px-4 sm:py-3 sm:text-[16px] rounded-lg shadow-md hover:scale-[1.04] 
-                  hover:shadow-lg transition font-semibold cursor-pointer"
+          {/* title */}
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 
+            hover:text-[#0077b6] transition mb-3"
+          >
+            {title}
+          </h2>
+
+          <div className="flex items-center justify-between w-full mt-4 pt-4 border-t">
+            <span className="text-xs sm:text-[16px] text-gray-600 font-semibold flex-1">
+              {new Date(publishedAt || updatedAt).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </span>
+
+            <div className="flex items-center gap-4 text-xs sm:text-[16px] flex-1">
+              <button
+                onClick={handleThumbLike}
+                className="flex items-center gap-1"
               >
-                Read More
-              </Link>
-            ) : (
-              <Link
-                to={`/edit/${slug}`}
-                className="bg-gray-600 text-white px-4 py-1 sm:px-5 sm:py-2 rounded-lg 
-                  shadow-md hover:bg-gray-700 transition font-semibold 
-                  cursor-pointer"
-              >
-                Edit Blog
-              </Link>
-            )}
+                <FaRegThumbsUp className="text-[#0077b6]" />
+                {thumbCount}
+              </button>
+
+              <span className="flex items-center gap-1">
+                <FaRegComment className="text-[#0077b6]" />
+                {commentCount}
+              </span>
+
+              <span className="flex items-center gap-1">
+                <FaEye className="text-[#0077b6]" />
+                {viewCount || 0}
+              </span>
+            </div>
+
+            <div className="flex justify-end flex-1">
+              {status === "published" ? (
+                <Link
+                  to={`/blog/${slug}`}
+                  className="bg-gradient-to-r from-[#0077b6] to-[#00b4d8]
+                    text-white px-4 py-2 sm:px-5 sm:py-3 rounded-lg shadow-md 
+                    hover:scale-[1.04] transition font-semibold"
+                >
+                  Read More
+                </Link>
+              ) : (
+                <Link
+                  to={`/edit/${slug}`}
+                  className="bg-gray-600 text-white px-5 py-2 rounded-lg 
+                  shadow-md hover:bg-gray-700 font-semibold"
+                >
+                  Edit Blog
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
 }
 
 export default BlogCard;
