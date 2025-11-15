@@ -6,12 +6,12 @@
 
 ## Features
 - Secure user authentication.
+- - Data encryption for security.
 - Create, edit, publish, and manage blogs easily.
 - Like, comment, view, and mark blogs as favourites.
 - Category-wise blog display with icons and images.
-- Real-time stats including likes, comments, and views.
 - REST API integration with axios for dynamic blog data.
-- Data encryption for security.
+- API caching for faster performance and fewer server calls.
 
 ## Tech Stack
 
