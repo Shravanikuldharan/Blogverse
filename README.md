@@ -2,11 +2,11 @@
 
 **Blogverse** is the perfect place to write, explore, and connect through engaging blogs.
 
-> This may take 1-2 minutes to load on first render since I'm using free-plan of onrender to host our backend server. It goes to sleep after 15 minutes of inactivity.
+> *The initial load may take **1–2 minutes** as the backend, hosted on Render’s free tier, enters sleep mode after 15 minutes of inactivity.*
 
 ## Features
 - Secure user authentication.
-- - Data encryption for security.
+- Data encryption for security.
 - Create, edit, publish, and manage blogs easily.
 - Like, comment, view, and mark blogs as favourites.
 - Category-wise blog display with icons and images.
