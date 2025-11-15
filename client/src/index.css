@@ -40,3 +40,10 @@ body {
   background-color: #f4f4f4 !important; 
   color: #111 !important;
 }
+
+.prose hr {
+  border: none !important;
+  height: 1px !important;
+  background-color: #e5e7eb !important; 
+  margin: 1.5rem 0 !important;
+}

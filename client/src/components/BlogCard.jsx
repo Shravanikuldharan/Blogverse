@@ -133,135 +133,134 @@ function BlogCard({
     } catch (error) { }
   };
 
-  return (
-    <div className="w-full flex justify-center">
-      <Toaster />
+ return (
+  <div className="w-full flex justify-center">
+    <Toaster />
 
-      <div
-        className="mt-12 relative bg-white rounded-3xl shadow-lg hover:scale-[1.01] transition-transform duration-300
+    <div
+      className="mt-12 relative bg-white rounded-3xl shadow-lg hover:scale-[1.01] transition-transform duration-300
       border border-[#E8EEF4] overflow-hidden w-[95%] max-w-5xl my-2 flex flex-col md:flex-row"
+    >
+      <span
+        className="absolute top-6 right-[-6px] flex items-center gap-1 px-3 py-1 text-xs font-semibold shadow-md"
+        style={{
+          backgroundColor: categoryData.bg,
+          color: categoryData.text,
+          borderRadius: "20px 0px 0px 20px",
+        }}
       >
-        {/* category */}
-        <span
-          className="absolute top-6 right-[-6px] flex items-center gap-1 px-3 py-1 text-xs font-semibold shadow-md"
-          style={{
-            backgroundColor: categoryData.bg,
-            color: categoryData.text,
-            borderRadius: "20px 0px 0px 20px",
-          }}
-        >
-          {CategoryIcon && (
-            <CategoryIcon
-              className="text-sm"
-              style={{ color: categoryData.iconColor }}
-            />
-          )}
-          {category}
-        </span>
-
-        {/* img */}
-        <div className="relative md:w-2/5 w-full h-60 md:h-auto group">
-          <img
-            src={categoryImage}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 group-hover:brightness-90"
+        {CategoryIcon && (
+          <CategoryIcon
+            className="text-sm"
+            style={{ color: categoryData.iconColor }}
           />
+        )}
+        {category}
+      </span>
 
-          {/* status */}
-          {status !== "published" && (
-            <span className="absolute top-3 right-3 bg-yellow-200 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full shadow">
-              {status.toUpperCase()}
-            </span>
+      {/* img */}
+      <div className="relative md:w-2/5 w-full h-60 md:h-auto group">
+        <img
+          src={categoryImage}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 group-hover:brightness-90"
+        />
+
+        {/* status */}
+        {status !== "published" && (
+          <span className="absolute top-3 right-3 bg-yellow-200 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full shadow">
+            {status.toUpperCase()}
+          </span>
+        )}
+
+        <button
+          onClick={toggleHeart}
+          className="cursor-pointer absolute top-3 left-3 bg-white shadow-md p-2 rounded-full hover:scale-110 transition"
+        >
+          {liked ? (
+            <FaHeart className="text-red-500 text-xl" />
+          ) : (
+            <FaRegHeart className="text-gray-600 text-xl" />
           )}
+        </button>
+      </div>
 
-          <button
-            onClick={toggleHeart}
-            className="cursor-pointer absolute top-3 left-3 bg-white shadow-md p-2 rounded-full hover:scale-110 transition"
+      {/* right side */}
+      <div className="p-4 sm:p-6 flex flex-col justify-between flex-1">
+
+        <div className="flex items-center gap-3 mb-3">
+          <div
+            className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white flex items-center justify-center 
+            rounded-full text-lg font-bold shadow-sm"
           >
-            {liked ? (
-              <FaHeart className="text-red-500 text-xl" />
-            ) : (
-              <FaRegHeart className="text-gray-600 text-xl" />
-            )}
-          </button>
+            {author.name.substring(0, 1).toUpperCase()}
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm font-semibold text-gray-800">{author.name}</p>
+            <p className="text-xs sm:text-sm font-normal text-gray-600">{author.email}</p>
+          </div>
         </div>
 
-        {/* right side */}
-        <div className="p-6 flex flex-col justify-between flex-1">
-          {/* author */}
-          <div className="flex items-center gap-3 mb-3">
-            <div
-              className="w-10 h-10 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white flex items-center justify-center 
-              rounded-full text-lg font-bold shadow-sm"
+        {/* title */}
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 hover:text-[#0077b6] transition duration-400 mb-3">
+          {title}
+        </h2>
+
+        <div className="flex items-center justify-between w-full mt-4 pt-4 border-t border-gray-200">
+          <span className="text-xs sm:text-sm text-gray-600 font-semibold flex-1">
+            {new Date(publishedAt || updatedAt).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </span>
+
+          <div className="flex items-center justify-center gap-4 text-xs sm:text-md flex-1">
+            <button
+              onClick={handleThumbLike}
+              className="flex cursor-pointer items-center gap-1 transition"
             >
-              {author.name.substring(0, 1).toUpperCase()}
-            </div>
-            <div>
-              <p className="font-semibold text-gray-800">{author.name}</p>
-              <p className="font-normal text-gray-600">{author.email}</p>
-            </div>
-          </div>
+              <FaRegThumbsUp className="text-[#0077b6]" />
+              <span className="text-gray-700">{thumbCount}</span>
+            </button>
 
-          {/* title */}
-          <h2 className="text-2xl font-bold text-gray-900 hover:text-[#0077b6] transition duration-400 mb-3">
-            {title}
-          </h2>
-
-          {/* date | stats | button */}
-          <div className="flex items-center justify-between w-full mt-4 pt-4 border-t border-gray-200">
-            <span className="text-gray-600 font-semibold text-sm flex-1">
-              {new Date(publishedAt || updatedAt).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })}
+            <span className="flex items-center gap-1">
+              <FaRegComment className="text-[#0077b6]" />
+              <span className="text-gray-700">{commentCount}</span>
             </span>
 
-            <div className="flex items-center justify-center gap-6 text-md flex-1">
-              <button
-                onClick={handleThumbLike}
-                className="flex cursor-pointer items-center gap-1 transition"
+            <span className="flex items-center gap-1">
+              <FaEye className="text-[#0077b6]" />
+              <span className="text-gray-700">{viewCount || 0}</span>
+            </span>
+          </div>
+
+          {/* btn */}
+          <div className="flex justify-end flex-1">
+            {status === "published" ? (
+              <Link
+                to={`/blog/${slug}`}
+                className="bg-gradient-to-r from-[#0077b6] to-[#00b4d8]
+                  text-white px-4 py-1 sm:px-5 sm:py-2 rounded-lg shadow-md hover:scale-[1.04] 
+                  hover:shadow-lg transition font-semibold cursor-pointer"
               >
-                <FaRegThumbsUp className="text-[#0077b6]" />
-                <span className="text-gray-700">{thumbCount}</span>
-              </button>
-
-              <span className="flex items-center gap-1">
-                <FaRegComment className="text-[#0077b6]" />
-                <span className="text-gray-700">{commentCount}</span>
-              </span>
-
-              <span className="flex items-center gap-1">
-                <FaEye className="text-[#0077b6]" />
-                <span className="text-gray-700">{viewCount || 0}</span>
-              </span>
-            </div>
-
-            <div className="flex justify-end flex-1">
-              {status === "published" ? (
-                <Link
-                  to={`/blog/${slug}`}
-                  className="bg-gradient-to-r from-[#0077b6] to-[#00b4d8]
-                    text-white px-5 py-2 rounded-lg shadow-md hover:scale-[1.04] 
-                    hover:shadow-lg transition font-semibold cursor-pointer"
-                >
-                  Read More
-                </Link>
-              ) : (
-                <Link
-                  to={`/edit/${slug}`}
-                  className="bg-gray-600 text-white px-5 py-2 rounded-lg 
-                    shadow-md hover:bg-gray-700 transition font-semibold 
-                    cursor-pointer"
-                >
-                  Edit Blog
-                </Link>
-              )}
-            </div>
+                Read More
+              </Link>
+            ) : (
+              <Link
+                to={`/edit/${slug}`}
+                className="bg-gray-600 text-white px-4 py-1 sm:px-5 sm:py-2 rounded-lg 
+                  shadow-md hover:bg-gray-700 transition font-semibold 
+                  cursor-pointer"
+              >
+                Edit Blog
+              </Link>
+            )}
           </div>
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default BlogCard;

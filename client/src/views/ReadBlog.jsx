@@ -8,6 +8,7 @@ import { FaThumbsUp, FaRegThumbsUp, FaEye, FaComment, FaRegComment } from "react
 import { BLOG_CATEGORIES } from "../constants";
 import Footer from "../components/Footer";
 import { fetchWithCache } from "../utils/apiCache";
+import "../index.css";
 
 function ReadBlog() {
   const { slug } = useParams();
@@ -123,7 +124,7 @@ function ReadBlog() {
 
         <div className="max-w-5xl mx-auto mt-10 bg-white rounded-3xl shadow-lg border border-[#E8EEF4] overflow-hidden">
 
-          <div className="relative h-80 group">
+<div className="relative h-56 sm:h-72 md:h-80 group">
             <img
               src={categoryData?.image}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -146,24 +147,25 @@ function ReadBlog() {
           </div>
 
           {/* title + author + stats */}
-          <div className="p-8 bg-white">
+<div className="p-4 sm:p-6 md:p-8 bg-white">
 
-            <h1 className="text-4xl font-bold text-orange-500 mb-8">
-              {blog.title}
-            </h1>
+<div className="text-[22px] sm:text-[28px] font-bold text-orange-500 mb-4 sm:mb-8">
+  {blog.title}
+</div>
 
-            <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+
+<div className="flex items-center justify-between mb-4 sm:mb-6 flex-wrap gap-3 sm:gap-4">
 
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white rounded-full flex items-center justify-center text-xl font-semibold">
+                <div className="w-8 h-8 text-md sm:text-lg sm:w-10 sm:h-10 bg-gradient-to-r from-[#0077b6] to-[#00b4d8] text-white rounded-full flex items-center justify-center font-semibold">
                   {blog?.author?.name?.substring(0, 1)}
                 </div>
-                <p className="font-bold text-[20px] text-gray-800">
+<p className="font-bold text-[14px] sm:text-[20px] text-gray-800">
                   {blog?.author?.name}
                 </p>
               </div>
 
-              <div className="flex font-semibold text-lg items-center gap-6 text-gray-700">
+<div className="flex font-semibold text-sm sm:text-lg items-center gap-4 sm:gap-6 text-gray-700">
                 <span className="flex items-center gap-2">
                   <FaEye className="text-[#0077b6]" />
                   <span>{blog.viewCount || 0}</span>
@@ -180,7 +182,7 @@ function ReadBlog() {
         </div>
 
         {/* blog content  */}
-        <div className="max-w-5xl mx-auto mt-8 bg-white shadow-lg border border-[#E8EEF4] rounded-3xl p-8">
+<div className="max-w-5xl mx-auto mt-6 sm:mt-8 bg-white shadow-lg border border-[#E8EEF4] rounded-3xl p-4 sm:p-6 md:p-8">
           <MarkdownEditor.Markdown source={blog.content} className="prose max-w-none font-semibold" />
         </div>
 
@@ -192,7 +194,7 @@ function ReadBlog() {
           </h2>
 
           {/* add comment box */}
-          <div className="bg-white border border-gray-200 p-5 rounded-2xl shadow-sm mb-12 flex flex-col justify-between h-full">
+<div className="bg-white border border-gray-200 p-4 sm:p-5 rounded-2xl shadow-sm mb-8 sm:mb-12 flex flex-col justify-between h-full">
             <textarea
               rows="3"
               className="w-full border border-gray-300 rounded-xl p-3 focus:ring-[#0077b6] focus:ring-2 outline-none"
@@ -217,7 +219,7 @@ function ReadBlog() {
               comments.map((c) => (
                 <div
                   key={c._id}
-                  className="bg-white border border-[#E8EEF4] p-4 rounded-2xl shadow-sm hover:shadow-lg transition"
+                  className="bg-white border border-[#E8EEF4] p-3 sm:p-4 rounded-2xl shadow-sm hover:shadow-lg transition"
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-3">
