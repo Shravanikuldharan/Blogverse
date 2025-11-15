@@ -15,7 +15,7 @@
 
 ## Tech Stack
 
-- **Frontend:** React, TailwindCSS, React Icons, React Hot Toast, Axios, Vite, Cors
+- **Frontend:** React, TailwindCSS, React Icons, React Hot Toast, Axios, Vite
 - **Backend:** NodeJS, ExpressJS, Mongoose, MongoDB, CORS, Dotenv, MD5, Nodemon
 
 ## Contact
