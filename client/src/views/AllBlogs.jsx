@@ -5,34 +5,34 @@ import { getCurrentUser } from "./../util.js";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import toast, { Toaster } from "react-hot-toast";
-import { fetchWithCache } from "../utils/apiCache.js";
+// import { fetchWithCache } from "../utils/apiCache.js";
 
 function AllBlogs() {
   const [user, setUser] = useState(null);
   const [blogs, setBlogs] = useState([]);
 
-  // const fetchBlogs = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       `${import.meta.env.VITE_API_URL}/blogs?author=${user?._id || ""}`
-  //     );
-  //     setBlogs(response.data.data);
-  //   } catch (error) {
-  //     console.error("Error fetching blogs:", error);
-  //   }
-  // };
-
   const fetchBlogs = async () => {
     try {
-      const res = await fetchWithCache(
-        `${import.meta.env.VITE_API_URL}/blogs?author=${user?._id || ""}`,
-        `cache_allblogs_${user?._id || "guest"}`
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/blogs?author=${user?._id || ""}`
       );
-      setBlogs(res.data);
+      setBlogs(response.data.data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
     }
   };
+
+  // const fetchBlogs = async () => {
+  //   try {
+  //     const res = await fetchWithCache(
+  //       `${import.meta.env.VITE_API_URL}/blogs?author=${user?._id || ""}`,
+  //       `cache_allblogs_${user?._id || "guest"}`
+  //     );
+  //     setBlogs(res.data);
+  //   } catch (error) {
+  //     console.error("Error fetching blogs:", error);
+  //   }
+  // };
 
   useEffect(() => {
     setUser(getCurrentUser());

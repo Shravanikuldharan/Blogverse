@@ -48,25 +48,25 @@ function ReadBlog() {
     setThumbCount(data.thumbLikes || data.totalThumbLikes || data.likes || 0);
   };
 
-  // const loadComments = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       `${import.meta.env.VITE_API_URL}/blogs/${slug}/comments`
-  //     );
-  //     setComments(response.data.comments || []);
-  //   } catch (error) {
-  //     toast.error("Failed to load comments");
-  //   }
-  // };
-
   const loadComments = async () => {
-    const res = await fetchWithCache(
-      `${import.meta.env.VITE_API_URL}/blogs/${slug}/comments`,
-      `cache_comments_${slug}`,
-       1 * 1000
-    );
-    setComments(res.comments || []);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/blogs/${slug}/comments`
+      );
+      setComments(response.data.comments || []);
+    } catch (error) {
+      toast.error("Failed to load comments");
+    }
   };
+
+  // const loadComments = async () => {
+  //   const res = await fetchWithCache(
+  //     `${import.meta.env.VITE_API_URL}/blogs/${slug}/comments`,
+  //     `cache_comments_${slug}`,
+  //      1 * 1000
+  //   );
+  //   setComments(res.comments || []);
+  // };
 
   useEffect(() => {
     fetchBlog();
