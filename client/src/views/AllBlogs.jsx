@@ -40,13 +40,13 @@ function AllBlogs() {
 
   return (
     <>
-      <div className="bg-[#F0FAFF] mx-auto p-4 pb-6">
+      <div className="bg-[#F0FAFF] min-h-screen flex flex-col mx-auto p-4 pb-6">
         <Navbar />
 
         <Toaster />
 
         {blogs.length === 0 ? (
-          <p className="text-gray-500 text-center mt-10">
+          <p className="text-gray-500 text-center mt-30">
             No blogs found yet. Create your first one!
           </p>
         ) : (
