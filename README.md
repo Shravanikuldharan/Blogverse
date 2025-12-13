@@ -1,4 +1,4 @@
-# [Blogrid 📝](https://https://blogverse-ui.onrender.com/)
+# [Blogverse 📝](https://https://blogverse-ui.onrender.com/)
 
 **Blogverse** is the perfect place to write, explore, and connect through engaging blogs.
 
